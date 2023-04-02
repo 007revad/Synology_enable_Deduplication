@@ -23,6 +23,8 @@ It will work for DSM 7.2 beta and DSM 7.1.1 (and possibly DSM 7.1 and maybe even
 
 Deduplication requires 16GB of memory or more.
 
+Deduplication only works on SSD volumes.
+
 Because the bc command is not included in DSM you need to install **SynoCli misc. Tools** from SynoCommunity for this script to work.
 
 1. Package Center > Settings > Package Sources > Add
