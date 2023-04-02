@@ -7,8 +7,6 @@
 
 Enable data deduplication with non-Synology SSDs and unsupported NAS models
 
-hello world.
-
 It will work for DSM 7.2 beta and DSM 7.1.1 (and possibly DSM 7.1 and maybe even DSM 7.0). As for which models it will work with, I don't know yet. I do know it does work on models not listed by Synology as supported for data deduplication.
 
 **Confirmed working on:**
