@@ -66,7 +66,7 @@ Here's the result after running the script and rebooting. Note that the DS1821+ 
 <p align="center">Non-Synology SSDs setup as a volume</p>
 <p align="center"><img src="/images/1_ds1821+_dedupe_nvmes.png"></p>
 
-<p align="center">Enable Deduplication option available</p>
+<p align="center">Enable Deduplication option available after running this script and rebooting</p>
 <p align="center"><img src="/images/3_ds1821+_dedupe_option_enabled.png"></p>
 
 <p align="center">Configure Deduplication</p>
