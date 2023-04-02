@@ -63,7 +63,7 @@ Here's the result after running the script and rebooting. Note that the DS1821+ 
 <p align="center">Unsupported NAS model with enough memory</p>
 <p align="center"><img src="/images/0_ds1821+.png"></p>
 
-<p align="center">Non-Synology SSDs</p>
+<p align="center">Non-Synology SSDs setup as a volume</p>
 <p align="center"><img src="/images/1_ds1821+_dedupe_nvmes.png"></p>
 
 <p align="center">Enable Deduplication option available</p>
