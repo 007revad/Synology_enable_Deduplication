@@ -30,7 +30,7 @@ It will work for DSM 7.2 beta and DSM 7.1.1 (and possibly DSM 7.1 and maybe even
 
 ## Requirements
 
-Dedplication requires 16GB or memory or more.
+Deduplication requires 16GB or memory or more.
 
 Because the bc command is not included in DSM you need to install **SynoCli misc. Tools** from SynoCommunity for this script to work.
 
@@ -60,7 +60,7 @@ sudo -i /volume1/scripts/syno_enable_dedupe.sh
 
 Here's the result after running the script and rebooting. Note that the DS1821+ is not officially listed as supporting deduplication, and non-Synology SSDs are being used.
 
-<p align="center">Unsupported NAS model</p>
+<p align="center">Unsupported NAS model with enough memory</p>
 <p align="center"><img src="/images/0_ds1821+.png"></p>
 
 <p align="center">Non-Synology SSDs</p>
