@@ -10,7 +10,7 @@
 # sudo /volume1/scripts/syno_dedupe.sh
 #------------------------------------------------------------------------------
 
-scriptver="v1.0.4"
+scriptver="v1.0.5"
 script=Synology_enable_Deduplication
 repo="007revad/Synology_enable_Deduplication"
 
@@ -518,6 +518,49 @@ if [[ $bytes == "9090" ]]; then
 else
     echo -e "${Error}ERROR ${Off} Failed to edit file!"
     exit 1
+fi
+
+
+#------------------------------------------------------------------------------
+# Edit /etc.defaults/synoinfo.conf
+
+# Backup synoinfo.conf if needed
+synoinfo="/etc.defaults/synoinfo.conf"
+if [[ ! -f ${synoinfo}.bak ]]; then
+    if cp "$synoinfo" "$synoinfo.bak"; then
+        echo -e "\nBacked up $(basename -- "$synoinfo")" >&2
+    else
+        echo -e "\n${Error}ERROR 5${Off} Failed to backup $(basename -- "$synoinfo")!"
+        exit 1
+    fi
+fi
+
+
+# Enable deduplication support
+# Check if dedupe support is enabled
+sbd=support_btrfs_dedupe
+setting="$(get_key_value "$synoinfo" ${sbd})"
+enabled=""
+if [[ ! $setting ]]; then
+    # Add support_btrfs_dedupe="yes"
+    echo 'support_btrfs_dedupe="yes"' >> "$synoinfo"
+    enabled="yes"
+elif [[ $setting == "no" ]]; then
+    # Change support_btrfs_dedupe="no" to "yes"
+    sed -i "s/${sbd}=\"no\"/${sbd}=\"yes\"/" "$synoinfo"
+    enabled="yes"
+elif [[ $setting == "yes" ]]; then
+    echo -e "\nData Deduplication already enabled."
+fi
+
+# Check if we enabled deduplication
+setting="$(get_key_value "$synoinfo" ${sbd})"
+if [[ $enabled == "yes" ]]; then
+    if [[ $setting == "yes" ]]; then
+        echo -e "\nEnabled Data Deduplication."
+    else
+        echo -e "\n${Error}ERROR${Off} Failed to enable Data Deduplication!"
+    fi
 fi
 
 
