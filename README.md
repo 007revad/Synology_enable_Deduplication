@@ -1,2 +1,2 @@
-# Synology_enable_deduplication-
-Enable deduplication with non-Synology SSDs
+# Synology enable Deduplication
+Enable deduplication with non-Synology SSDs and unsupported NAS models
