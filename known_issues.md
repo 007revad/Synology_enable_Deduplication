@@ -1,4 +1,4 @@
-### Known issues in DSM 7.2-64213 Beta
+**Known issues in DSM 7.2-64213 Beta**
 
 ***DSM 7.2-64216 Beta is okay***
 
