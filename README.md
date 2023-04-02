@@ -5,11 +5,11 @@
 
 ### Description
 
-Enable deduplication with non-Synology SSDs and unsupported NAS models
+Enable data deduplication with non-Synology SSDs and unsupported NAS models
 
-This script will enable creating M.2 storage pools and volumes all from within Storage Manager.
+hello world.
 
-It will work for DSM 7.2 beta and DSM 7.1.1 (and possibly DSM 7.1 and maybe even DSM 7.0). As for which models it will work with, I don't know yet. I do know it does work on models listed by Synology as supported for creating M.2 volumes... but I suspect it will work with any Synology model that has M.2 slots or a PCIe card with M.2 slots.
+It will work for DSM 7.2 beta and DSM 7.1.1 (and possibly DSM 7.1 and maybe even DSM 7.0). As for which models it will work with, I don't know yet. I do know it does work on models not listed by Synology as supported for data deduplication.
 
 **Confirmed working on:**
 
@@ -30,7 +30,7 @@ It will work for DSM 7.2 beta and DSM 7.1.1 (and possibly DSM 7.1 and maybe even
 
 ## Requirements
 
-Deduplication requires 16GB or memory or more.
+Deduplication requires 16GB of memory or more.
 
 Because the bc command is not included in DSM you need to install **SynoCli misc. Tools** from SynoCommunity for this script to work.
 
