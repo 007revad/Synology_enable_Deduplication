@@ -58,32 +58,21 @@ sudo -i /volume1/scripts/syno_enable_dedupe.sh
 
 Here's the result after running the script and rebooting. Note that the DS1821+ is not officially listed as supporting deduplication, and non-Synology SSDs are being used.
 
-<p align="center">After reboot I got some notifications saying the M.2 drives can be managed</p>
-<p align="center"><img src="/images/1b-after-reboot.png"></p>
+<p align="center">Unsupported NAS model</p>
+<p align="center"><img src="/images/0_ds1821+.png"></p>
 
-<p align="center">No M2 Storage Pool or Volume yet</p>
-<p align="center"><img src="/images/2-no-m2-volume-yet.png"></p>
+<p align="center">Non-Synology SSDs</p>
+<p align="center"><img src="/images/1_ds1821+_dedupe_nvmes.png"></p>
 
-<p align="center">Non-Synology M.2 drives</p>
-<p align="center"><img src="/images/3-non-synology-m2-drives-2.png"></p>
+<p align="center">Enable Deduplication option available</p>
+<p align="center"><img src="/images/3_ds1821+_dedupe_option_enabled.png"></p>
 
-<p align="center">Create Storage Pool 2</p>
-<p align="center"><img src="/images/4-create-storage-pool-3.png"></p>
+<p align="center">Configure Deduplication</p>
+<p align="center"><img src="/images/4_ds1821+_dedupe_configure.png"></p>
 
-<p align="center">I wonder if RAID 5 and SHR-2 would be available if I had four M.2 drives.</p>
+<p align="center">Deduplication finished notification</p>
+<p align="center"><img src="/images/5_ds1821+_dedupe_notification.png"></p>
 
-<p align="center">RAID choices including SHR and JBOD</p>
-<p align="center"><img src="/images/5-raid-choices-2.png"></p>
-
-<p align="center">Select my non-Synology M.2 drives</p>
-<p align="center"><img src="/images/7-select-non-synology-drives-2.png"></p>
-
-<p align="center">We have an SHR M.2 storage pool</p>
-<p align="center"><img src="/images/10-we-have-a-m2.storage-pool-2.png"></p>
-
-<p align="center">Create Volume 2</p>
-<p align="center"><img src="/images/11-create-volume-3.png"></p>
-
-<p align="center">Finished Creating Volume 2</p>
-<p align="center"><img src="/images/13-finished-3.png"></p>
+<p align="center">Deduplications works. Result would look better if I had some data the SSD volume.</p>
+<p align="center"><img src="/images/6_ds1821+_dedupe_works.png"></p>
 
