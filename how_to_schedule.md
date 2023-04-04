@@ -8,7 +8,7 @@ To schedule a script to run on your Synology at boot-up or shut-down follow thes
 2. Select **User-defined script**.
 3. Enter a task name.
 4. Select **root** as the user (The script needs to run as root).
-5. Select **Shut-down** as the event that triggers the task.
+5. Select **Shutdown** as the event that triggers the task.
 6. Leave **Enable** ticked.
 7. Click **Task Settings**.
 8. Optionally you can tick **Send run details by email** and **Send run details only when the script terminates abnormally** then enter your email address.
