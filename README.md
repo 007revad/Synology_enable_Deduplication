@@ -21,9 +21,8 @@ It will work for DSM 7.2 beta and DSM 7.1.1 (and possibly DSM 7.1 and maybe even
 
 ## Requirements
 
-Deduplication requires 16GB of memory or more.
-
-Deduplication only works on SSD volumes.
+- Deduplication requires 16GB of memory or more.
+- Deduplication only works on SSD volumes that are formatted in Btrfs.
 
 Because the bc command is not included in DSM you need to install **SynoCli misc. Tools** from SynoCommunity for this script to work.
 
@@ -35,6 +34,7 @@ Because the bc command is not included in DSM you need to install **SynoCli misc
 6. Install **SynoCli misc. Tools**
 
 ## To run the script
+
 **Note:** Replace /volume1/scripts/ with the path to where the script is located.
 Run the script then reboot the Synology:
 ```YAML
@@ -48,6 +48,18 @@ sudo -i /volume1/scripts/syno_enable_dedupe.sh
   -h, --help       Show this help message
   -v, --version    Show the script version
 ```
+
+To get rid of <a href=7_before_running_syno_hdd_db.png>this annoying warning</a> run <a href=https://github.com/007revad/Synology_HDD_db>Synology_HDD_db</a> which will add your drives to DSM's compatibile drive databases, and prevent the drive compatability databases being updated.
+
+```YAML
+sudo -i /path-to-script/syno_hdd_db.sh --noupdate
+```
+
+## What about DSM updates?
+
+After any DSM update you will need to run this script, and the Synology_HDD_db script. 
+
+Or you can schedule them to run when the Synology is shutting down.
 
 ## Screenshots
 
