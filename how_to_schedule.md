@@ -20,6 +20,6 @@ Here's some screenshots showing what needs to set:
 
 <p align="leftr"><img src="images/schedule1.png"></p>
 
-<p align="leftr"><img src="images/schedule2.png"></p>
+<p align="leftr"><img src="images/schedule2b.png"></p>
 
 <p align="leftr"><img src="images/schedule3.png"></p>
