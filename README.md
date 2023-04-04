@@ -33,7 +33,9 @@ Because the bc command is not included in DSM you need to install **SynoCli misc
 5. Click Community on the left.
 6. Install **SynoCli misc. Tools**
 
-## To run the script
+## How to run the script
+
+### Running the script via SSH
 
 **Note:** Replace /volume1/scripts/ with the path to where the script is located.
 Run the script then reboot the Synology:
@@ -55,11 +57,13 @@ To get rid of <a href=7_before_running_syno_hdd_db.png>this annoying warning</a>
 sudo -i /path-to-script/syno_hdd_db.sh --noupdate
 ```
 
-## What about DSM updates?
+### What about DSM updates?
 
-After any DSM update you will need to run this script, and the Synology_HDD_db script. 
+After any DSM update you will need to run this script, and the Synology_HDD_db script again. 
 
-Or you can schedule them to run when the Synology is shutting down.
+Or you can schedule both Synology_enable_Deduplication and Synology_HDD_db to run when the Synology shuts down, to avoid having to remember to run both scripts after a DSM update.
+
+See <a href=how_to_schedule.md/>How to schedule a script in Synology Task Manager</a>
 
 ## Screenshots
 
