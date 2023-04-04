@@ -84,6 +84,6 @@ Here's the result after running the script and rebooting. Note that the DS1821+ 
 <p align="center">Deduplication finished notification</p>
 <p align="center"><img src="/images/5_ds1821+_dedupe_notification.png"></p>
 
-<p align="center">Deduplications works. Result would look better if I had some data the SSD volume.</p>
+<p align="center">Deduplications works. Result would look better if I had some data on the SSD volume.</p>
 <p align="center"><img src="/images/6_ds1821+_dedupe_works.png"></p>
 
