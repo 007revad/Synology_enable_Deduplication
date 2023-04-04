@@ -10,7 +10,7 @@
 # sudo /volume1/scripts/syno_dedupe.sh
 #------------------------------------------------------------------------------
 
-scriptver="v1.0.5"
+scriptver="v1.0.6"
 script=Synology_enable_Deduplication
 repo="007revad/Synology_enable_Deduplication"
 
@@ -271,7 +271,7 @@ rebootmsg(){
     echo -e "\n${Cyan}The Synology needs to restart.${Off}"
     echo -e "Type ${Cyan}yes${Off} to reboot now."
     echo -e "Type anything else to quit (if you will restart it yourself)."
-    read -r answer
+    read -r -t 10 answer
     if [[ ${answer,,} != "yes" ]]; then exit; fi
 
     # Reboot in the background so user can see DSM's "going down" message

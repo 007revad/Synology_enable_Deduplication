@@ -21,9 +21,8 @@ It will work for DSM 7.2 beta and DSM 7.1.1 (and possibly DSM 7.1 and maybe even
 
 ## Requirements
 
-Deduplication requires 16GB of memory or more.
-
-Deduplication only works on SSD volumes.
+- Deduplication requires 16GB of memory or more.
+- Deduplication only works on SSD volumes that are formatted in Btrfs.
 
 Because the bc command is not included in DSM you need to install **SynoCli misc. Tools** from SynoCommunity for this script to work.
 
@@ -34,7 +33,10 @@ Because the bc command is not included in DSM you need to install **SynoCli misc
 5. Click Community on the left.
 6. Install **SynoCli misc. Tools**
 
-## To run the script
+## How to run the script
+
+### Running the script via SSH
+
 **Note:** Replace /volume1/scripts/ with the path to where the script is located.
 Run the script then reboot the Synology:
 ```YAML
@@ -48,6 +50,20 @@ sudo -i /volume1/scripts/syno_enable_dedupe.sh
   -h, --help       Show this help message
   -v, --version    Show the script version
 ```
+
+To get rid of <a href=7_before_running_syno_hdd_db.png>this annoying warning</a> run <a href=https://github.com/007revad/Synology_HDD_db>Synology_HDD_db</a> which will add your drives to DSM's compatibile drive databases, and prevent the drive compatability databases being updated.
+
+```YAML
+sudo -i /path-to-script/syno_hdd_db.sh --noupdate
+```
+
+### What about DSM updates?
+
+After any DSM update you will need to run this script, and the Synology_HDD_db script again. 
+
+Or you can schedule both Synology_enable_Deduplication and Synology_HDD_db to run when the Synology shuts down, to avoid having to remember to run both scripts after a DSM update.
+
+See <a href=how_to_schedule.md/>How to schedule a script in Synology Task Manager</a>
 
 ## Screenshots
 
@@ -68,6 +84,6 @@ Here's the result after running the script and rebooting. Note that the DS1821+ 
 <p align="center">Deduplication finished notification</p>
 <p align="center"><img src="/images/5_ds1821+_dedupe_notification.png"></p>
 
-<p align="center">Deduplications works. Result would look better if I had some data the SSD volume.</p>
+<p align="center">Deduplications works. Result would look better if I had some data on the SSD volume.</p>
 <p align="center"><img src="/images/6_ds1821+_dedupe_works.png"></p>
 
