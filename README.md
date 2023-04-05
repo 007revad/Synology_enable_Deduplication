@@ -51,7 +51,9 @@ sudo -i /volume1/scripts/syno_enable_dedupe.sh
   -v, --version    Show the script version
 ```
 
-To get rid of <a href=7_before_running_syno_hdd_db.png>this annoying warning</a> run <a href=https://github.com/007revad/Synology_HDD_db>Synology_HDD_db</a> which will add your drives to DSM's compatibile drive databases, and prevent the drive compatability databases being updated.
+**Extra Steps:**
+
+To get rid of <a href="images/notification.png">drive database outdated</a> notifications and <a href=images/before_running_syno_hdd_db.png>unrecognised firmware</a> warnings run <a href=https://github.com/007revad/Synology_HDD_db>Synology_HDD_db</a> which will add your drives to DSM's compatibile drive databases, and prevent the drive compatability databases being updated between DSM updates.
 
 ```YAML
 sudo -i /path-to-script/syno_hdd_db.sh --noupdate
@@ -60,6 +62,8 @@ sudo -i /path-to-script/syno_hdd_db.sh --noupdate
 ### What about DSM updates?
 
 After any DSM update you will need to run this script, and the Synology_HDD_db script again. 
+
+### Schedule the script to run at shutdown
 
 Or you can schedule both Synology_enable_Deduplication and Synology_HDD_db to run when the Synology shuts down, to avoid having to remember to run both scripts after a DSM update.
 
