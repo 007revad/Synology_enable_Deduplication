@@ -1,3 +1,6 @@
+v1.0.7
+- Changed to show usage if invalid long option used instead of continuing.
+
 v1.0.6
 - Added a 10 second timeout to the reboot question so the script will exit if scheduled to run at shutdown.
 
