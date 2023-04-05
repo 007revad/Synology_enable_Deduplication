@@ -10,7 +10,7 @@
 # sudo /volume1/scripts/syno_dedupe.sh
 #------------------------------------------------------------------------------
 
-scriptver="v1.0.6"
+scriptver="v1.0.7"
 script=Synology_enable_Deduplication
 repo="007revad/Synology_enable_Deduplication"
 
@@ -85,12 +85,14 @@ if options="$(getopt -o abcdefghijklmnopqrstuvwxyz0123456789 -a \
                 break
                 ;;
             *)                  # Show usage options
-                echo "Invalid option '$1'"
+                echo -e "Invalid option '$1'\n"
                 usage "$1"
                 ;;
         esac
         shift
     done
+else
+    usage
 fi
 
 
