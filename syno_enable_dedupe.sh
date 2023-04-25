@@ -10,9 +10,15 @@
 # sudo /volume1/scripts/syno_dedupe.sh
 #------------------------------------------------------------------------------
 
-scriptver="v1.0.7"
+scriptver="v1.0.8"
 script=Synology_enable_Deduplication
 repo="007revad/Synology_enable_Deduplication"
+
+# Check BASH variable is is non-empty and posix mode is off, else abort with error.
+[ "$BASH" ] && ! shopt -qo posix || {
+    printf >&2 "This is a bash script, don't run it with sh\n"
+    exit 1
+}
 
 #echo -e "bash version: $(bash --version | head -1 | cut -d' ' -f4)\n"  # debug
 
