@@ -10,12 +10,13 @@
 # sudo /volume1/scripts/syno_dedupe.sh
 #------------------------------------------------------------------------------
 
-scriptver="v1.0.8"
+scriptver="v1.0.9"
 script=Synology_enable_Deduplication
 repo="007revad/Synology_enable_Deduplication"
 
 # Check BASH variable is is non-empty and posix mode is off, else abort with error.
 [ "$BASH" ] && ! shopt -qo posix || {
+    printf \\a
     printf >&2 "This is a bash script, don't run it with sh\n"
     exit 1
 }
@@ -25,7 +26,7 @@ repo="007revad/Synology_enable_Deduplication"
 # Shell Colors
 #Black='\e[0;30m'   # ${Black}
 Red='\e[0;31m'      # ${Red}
-Green='\e[0;32m'    # ${Green}
+#Green='\e[0;32m'    # ${Green}
 Yellow='\e[0;33m'   # ${Yellow}
 #Blue='\e[0;34m'    # ${Blue}
 #Purple='\e[0;35m'  # ${Purple}
@@ -34,6 +35,9 @@ Cyan='\e[0;36m'     # ${Cyan}
 Error='\e[41m'      # ${Error}
 Off='\e[0m'         # ${Off}
 
+ding(){
+    printf \\a
+}
 
 usage(){
     cat <<EOF
@@ -61,7 +65,7 @@ EOF
 
 
 # Save options used
-args="$@"
+#args="$@"
 
 
 # Check for flags with getopt
@@ -102,12 +106,14 @@ if options="$(getopt -o abcdefghijklmnopqrstuvwxyz0123456789 -a \
         shift
     done
 else
+    echo
     usage
 fi
 
 
 # Check script is running as root
 if [[ $( whoami ) != "root" ]]; then
+    ding
     echo -e "${Error}ERROR${Off} This script must be run as root or sudo!"
     exit 1
 fi
@@ -115,6 +121,7 @@ fi
 # Get DSM major version
 dsm=$(get_key_value /etc.defaults/VERSION majorversion)
 if [[ $dsm -lt "7" ]]; then
+    ding
     echo "This script only works for DSM 7."
     exit 1
 fi
@@ -154,7 +161,7 @@ if [[ $smallfixnumber -gt "0" ]]; then smallfix="-$smallfixnumber"; fi
 echo -e "$model DSM $productversion-$buildnumber$smallfix $buildphase\n"
 
 # Show options used
-echo "Using options: $args"
+#echo "Using options: $args"
 
 
 #------------------------------------------------------------------------------
@@ -246,14 +253,14 @@ if ! printf "%s\n%s\n" "$tag" "$scriptver" |
 
                             # Delete downloaded .tar.gz file
                             if ! rm "/tmp/$script-$shorttag.tar.gz"; then
-                                delerr=1
+                                #delerr=1
                                 echo -e "${Error}ERROR ${Off} Failed to delete"\
                                     "downloaded /tmp/$script-$shorttag.tar.gz!"
                             fi
 
                             # Delete extracted tmp files
                             if ! rm -r "/tmp/$script-$shorttag"; then
-                                delerr=1
+                                #delerr=1
                                 echo -e "${Error}ERROR ${Off} Failed to delete"\
                                     "downloaded /tmp/$script-$shorttag!"
                             fi
@@ -301,7 +308,9 @@ IFS=$'\n' read -r -d '' -a array < <(dmidecode -t memory | grep -i 'size')
 if [[ ${#array[@]} -gt "0" ]]; then
     num="0"
     while [[ $num -lt "${#array[@]}" ]]; do
-        ram=$(printf %s "${array[num]}" | cut -d" " -f2)
+        #ram=$(printf %s "${array[num]}" | cut -d" " -f2)
+        ram=$(printf %s "${array[num]}" | awk '{print $2}')
+        bytes=$(printf %s "${array[num]}" | awk '{print $3}')
         if [[ $ramtotal ]]; then
             ramtotal=$((ramtotal +ram))
         else
@@ -309,13 +318,25 @@ if [[ ${#array[@]} -gt "0" ]]; then
         fi
         num=$((num +1))
     done
-    if [[ $ramtotal -lt 16384 ]]; then
-        echo -e "${Error}ERROR ${Off} Not enough memory installed for deduplication: $ramtotal MB!"
+    if [[ $bytes == GB ]]; then
+        if [[ $ramtotal -lt 16 ]]; then
+            ding
+            echo -e "${Error}ERROR ${Off} Not enough memory installed for deduplication: $ramtotal GB!"
+            exit 1
+        fi
+    elif [[ $bytes == MB ]]; then
+        if [[ $ramtotal -lt 16384 ]]; then
+            ding
+            echo -e "${Error}ERROR ${Off} Not enough memory installed for deduplication: $ramtotal MB!"
+            exit 1
+        fi
+    else
+        ding
+        echo -e "${Error}ERROR ${Off} Unable to determine the $bytes of installed memory!"
         exit 1
-    #else
-    #    echo "NAS has enough memory installed for deduplication: $ramtotal MB"
     fi
 else
+    ding
     echo -e "${Error}ERROR ${Off} Unable to determine the amount of installed memory!"
     exit 1
 fi
@@ -327,6 +348,7 @@ fi
 file="/usr/lib/libhwcontrol.so.1"
 
 if [[ ! -f ${file} ]]; then
+    ding
     echo -e "${Error}ERROR ${Off} File not found!"
     exit 1
 fi
@@ -356,10 +378,12 @@ if [[ $restore == "yes" ]]; then
             rebootmsg
             exit
         else
+            ding
             echo -e "${Error}ERROR ${Off} Backup failed!"
             exit 1
         fi
     else
+        ding
         echo -e "${Error}ERROR ${Off} Backup file not found!"
         exit 1
     fi
@@ -373,6 +397,7 @@ if [[ ! -f ${file}.bak ]]; then
     if cp "$file" "$file".bak ; then
         echo "Backup successful."
     else
+        ding
         echo -e "${Error}ERROR ${Off} Backup failed!"
         exit 1
     fi
@@ -388,6 +413,7 @@ else
         if cp "$file" "$file".bak ; then
             echo "Backup successful."
         else
+            ding
             echo -e "${Error}ERROR ${Off} Backup failed!"
             exit 1
         fi
@@ -506,6 +532,7 @@ else
     if [[ $bytes =~ "752"[0-9] ]]; then
         echo -e "\nEditing file."
     else
+        ding
         echo -e "\n${Red}hex string not found!${Off}"
         exit 1
     fi
@@ -515,6 +542,7 @@ fi
 # Replace bytes in file
 posrep=$(printf "%x\n" $((0x${poshex}+8)))
 if ! printf %s "${posrep}: 9090" | xxd -r - "$file"; then
+    ding
     echo -e "${Error}ERROR ${Off} Failed to edit file!"
     exit 1
 fi
@@ -531,6 +559,7 @@ if [[ $bytes == "9090" ]]; then
     echo -e "\n${Cyan}You can now enabled data deduplication"\
         "pool in Storage Manager.${Off}"
 else
+    ding
     echo -e "${Error}ERROR ${Off} Failed to edit file!"
     exit 1
 fi
@@ -545,6 +574,7 @@ if [[ ! -f ${synoinfo}.bak ]]; then
     if cp "$synoinfo" "$synoinfo.bak"; then
         echo -e "\nBacked up $(basename -- "$synoinfo")" >&2
     else
+        ding
         echo -e "\n${Error}ERROR 5${Off} Failed to backup $(basename -- "$synoinfo")!"
         exit 1
     fi
@@ -558,11 +588,13 @@ setting="$(get_key_value "$synoinfo" ${sbd})"
 enabled=""
 if [[ ! $setting ]]; then
     # Add support_btrfs_dedupe="yes"
-    echo 'support_btrfs_dedupe="yes"' >> "$synoinfo"
+    #echo 'support_btrfs_dedupe="yes"' >> "$synoinfo"
+    synosetkeyvalue "$synoinfo" "$sbd" yes
     enabled="yes"
 elif [[ $setting == "no" ]]; then
     # Change support_btrfs_dedupe="no" to "yes"
-    sed -i "s/${sbd}=\"no\"/${sbd}=\"yes\"/" "$synoinfo"
+    #sed -i "s/${sbd}=\"no\"/${sbd}=\"yes\"/" "$synoinfo"
+    synosetkeyvalue "$synoinfo" "$sbd" yes
     enabled="yes"
 elif [[ $setting == "yes" ]]; then
     echo -e "\nData Deduplication already enabled."
