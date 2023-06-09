@@ -1,3 +1,10 @@
+v1.0.9
+- Fixed bug in DSM 7.2-64570 due to dmidecode now returning memory size in GB. Issue #16
+- Added sound when there's an error.
+
+v1.0.8
+- Prevent running with "sh scriptname.sh".
+
 v1.0.7
 - Changed to show usage if invalid long option used instead of continuing.
 - Show the options used.
