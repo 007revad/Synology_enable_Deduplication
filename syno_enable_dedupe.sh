@@ -10,16 +10,16 @@
 # sudo /volume1/scripts/syno_dedupe.sh
 #------------------------------------------------------------------------------
 
-scriptver="v1.0.9"
+scriptver="v1.0.10"
 script=Synology_enable_Deduplication
 repo="007revad/Synology_enable_Deduplication"
 
-# Check BASH variable is is non-empty and posix mode is off, else abort with error.
-[ "$BASH" ] && ! shopt -qo posix || {
+# Check BASH variable is bash
+if [ ! "$(basename "$BASH")" = bash ]; then
+    echo "This is a bash script. Do not run it with $(basename "$BASH")"
     printf \\a
-    printf >&2 "This is a bash script, don't run it with sh\n"
     exit 1
-}
+fi
 
 #echo -e "bash version: $(bash --version | head -1 | cut -d' ' -f4)\n"  # debug
 
@@ -52,6 +52,7 @@ Options:
   -v, --version    Show the script version
   
 EOF
+    exit 0
 }
 
 
@@ -61,11 +62,12 @@ $script $scriptver - by 007revad
 
 See https://github.com/$repo
 EOF
+    exit 0
 }
 
 
 # Save options used
-#args="$@"
+#args=("$@")
 
 
 # Check for flags with getopt
@@ -74,25 +76,25 @@ if options="$(getopt -o abcdefghijklmnopqrstuvwxyz0123456789 -a \
     eval set -- "$options"
     while true; do
         case "${1,,}" in
-            -c|--check)         # Check value in file and backup file
-                check=yes
-                ;;
-            -r|--restore)       # Restore backup to undo changes
-                restore=yes
-                ;;
-            -h|--help)          # Show usage options
-                usage
-                exit
-                ;;
-            -v|--version)       # Show script version
-                scriptversion
-                exit
-                ;;
             -l|--log)           # Log
-                log=yes
+                #log=yes
                 ;;
             -d|--debug)         # Show and log debug info
                 debug=yes
+                ;;
+            -c|--check)         # Check value in file and backup file
+                check=yes
+                break
+                ;;
+            -r|--restore)       # Restore backup to undo changes
+                restore=yes
+                break
+                ;;
+            -h|--help)          # Show usage options
+                usage
+                ;;
+            -v|--version)       # Show script version
+                scriptversion
                 ;;
             --)
                 shift
@@ -108,6 +110,12 @@ if options="$(getopt -o abcdefghijklmnopqrstuvwxyz0123456789 -a \
 else
     echo
     usage
+fi
+
+
+if [[ $debug == "yes" ]]; then
+    # set -x
+    export PS4='`[[ $? == 0 ]] || echo "\e[1;31;40m($?)\e[m\n "`:.$LINENO:'
 fi
 
 
@@ -161,7 +169,7 @@ if [[ $smallfixnumber -gt "0" ]]; then smallfix="-$smallfixnumber"; fi
 echo -e "$model DSM $productversion-$buildnumber$smallfix $buildphase\n"
 
 # Show options used
-#echo "Using options: $args"
+#echo "Using options: ${args[*]}"
 
 
 #------------------------------------------------------------------------------
@@ -269,10 +277,10 @@ if ! printf "%s\n%s\n" "$tag" "$scriptver" |
                             if [[ $copyerr != 1 ]] && [[ $permerr != 1 ]]; then
                                 echo -e "\n$tag and changes.txt downloaded to:"\
                                     "$scriptpath"
-                                echo -e "${Cyan}Do you want to stop this script"\
-                                    "so you can run the new one?${Off} [y/n]"
-                                read -r reply
-                                if [[ ${reply,,} == "y" ]]; then exit; fi
+
+                                # Reload script
+                                printf -- '-%.0s' {1..79}; echo  # print 79 -
+                                exec "$0" "${args[@]}"
                             fi
                         fi
                     else
@@ -293,7 +301,7 @@ rebootmsg(){
     echo -e "\n${Cyan}The Synology needs to restart.${Off}"
     echo -e "Type ${Cyan}yes${Off} to reboot now."
     echo -e "Type anything else to quit (if you will restart it yourself)."
-    read -r -t 10 answer
+    read -r -t 20 answer
     if [[ ${answer,,} != "yes" ]]; then exit; fi
 
     # Reboot in the background so user can see DSM's "going down" message
@@ -304,36 +312,35 @@ rebootmsg(){
 #----------------------------------------------------------
 # Check NAS has enough memory
 
-IFS=$'\n' read -r -d '' -a array < <(dmidecode -t memory | grep -i 'size')
+IFS=$'\n' read -r -d '' -a array < <(dmidecode -t memory | grep -E "[Ss]ize: [0-9]+ [MG]{1}[B]{1}$")
 if [[ ${#array[@]} -gt "0" ]]; then
     num="0"
     while [[ $num -lt "${#array[@]}" ]]; do
-        #ram=$(printf %s "${array[num]}" | cut -d" " -f2)
-        ram=$(printf %s "${array[num]}" | awk '{print $2}')
-        bytes=$(printf %s "${array[num]}" | awk '{print $3}')
-        if [[ $ramtotal ]]; then
-            ramtotal=$((ramtotal +ram))
-        else
-            ramtotal="$ram"
+        check=$(printf %s "${array[num]}" | awk '{print $1}')
+        if [[ ${check,,} == "size:" ]]; then
+            ramsize=$(printf %s "${array[num]}" | awk '{print $2}')
+            bytes=$(printf %s "${array[num]}" | awk '{print $3}')
+            if [[ $ramsize =~ ^[0-9]+$ ]]; then  # Check $ramsize is numeric
+                if [[ $bytes == "GB" ]]; then    # DSM 7.2 dmidecode returned GB
+                    ramsize=$((ramsize * 1024))  # Convert to MB
+                fi
+                if [[ $ramtotal ]]; then
+                    ramtotal=$((ramtotal +ramsize))
+                else
+                    ramtotal="$ramsize"
+                fi
+            fi
         fi
         num=$((num +1))
     done
-    if [[ $bytes == GB ]]; then
-        if [[ $ramtotal -lt 16 ]]; then
-            ding
-            echo -e "${Error}ERROR ${Off} Not enough memory installed for deduplication: $ramtotal GB!"
-            exit 1
-        fi
-    elif [[ $bytes == MB ]]; then
-        if [[ $ramtotal -lt 16384 ]]; then
-            ding
-            echo -e "${Error}ERROR ${Off} Not enough memory installed for deduplication: $ramtotal MB!"
-            exit 1
-        fi
-    else
+
+    ramgb=$((ramtotal / 1024))
+    if [[ $ramtotal -lt 16384 ]]; then
         ding
-        echo -e "${Error}ERROR ${Off} Unable to determine the $bytes of installed memory!"
+        echo -e "${Error}ERROR ${Off} Not enough memory installed for deduplication: $ramgb GB"
         exit 1
+    else
+        echo -e "NAS has $ramgb GB of memory.\n"
     fi
 else
     ding

@@ -1,3 +1,10 @@
+v1.0.10
+- Fixed bugs where script was getting the wrong amount of memory on some models.
+- Fixed bug in DSM 7.2-64570 due to dmidecode now returning memory size in GB.
+- Now reloads itself after updating to new script version.
+- Changed method of checking script is running in bash.
+- Minor bug fixes.
+
 v1.0.9
 - Fixed bug in DSM 7.2-64570 due to dmidecode now returning memory size in GB. Issue #16
 - Added sound when there's an error.
