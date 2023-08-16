@@ -10,7 +10,7 @@
 # sudo /volume1/scripts/syno_dedupe.sh
 #------------------------------------------------------------------------------
 
-scriptver="v1.0.10"
+scriptver="v1.0.11"
 script=Synology_enable_Deduplication
 repo="007revad/Synology_enable_Deduplication"
 
@@ -67,7 +67,7 @@ EOF
 
 
 # Save options used
-#args=("$@")
+args=("$@")
 
 
 # Check for flags with getopt
@@ -312,40 +312,42 @@ rebootmsg(){
 #----------------------------------------------------------
 # Check NAS has enough memory
 
-IFS=$'\n' read -r -d '' -a array < <(dmidecode -t memory | grep -E "[Ss]ize: [0-9]+ [MG]{1}[B]{1}$")
-if [[ ${#array[@]} -gt "0" ]]; then
-    num="0"
-    while [[ $num -lt "${#array[@]}" ]]; do
-        check=$(printf %s "${array[num]}" | awk '{print $1}')
-        if [[ ${check,,} == "size:" ]]; then
-            ramsize=$(printf %s "${array[num]}" | awk '{print $2}')
-            bytes=$(printf %s "${array[num]}" | awk '{print $3}')
-            if [[ $ramsize =~ ^[0-9]+$ ]]; then  # Check $ramsize is numeric
-                if [[ $bytes == "GB" ]]; then    # DSM 7.2 dmidecode returned GB
-                    ramsize=$((ramsize * 1024))  # Convert to MB
-                fi
-                if [[ $ramtotal ]]; then
-                    ramtotal=$((ramtotal +ramsize))
-                else
-                    ramtotal="$ramsize"
+if [[ $restore != "yes" ]]; then
+    IFS=$'\n' read -r -d '' -a array < <(dmidecode -t memory | grep -E "[Ss]ize: [0-9]+ [MG]{1}[B]{1}$")
+    if [[ ${#array[@]} -gt "0" ]]; then
+        num="0"
+        while [[ $num -lt "${#array[@]}" ]]; do
+            check=$(printf %s "${array[num]}" | awk '{print $1}')
+            if [[ ${check,,} == "size:" ]]; then
+                ramsize=$(printf %s "${array[num]}" | awk '{print $2}')
+                bytes=$(printf %s "${array[num]}" | awk '{print $3}')
+                if [[ $ramsize =~ ^[0-9]+$ ]]; then  # Check $ramsize is numeric
+                    if [[ $bytes == "GB" ]]; then    # DSM 7.2 dmidecode returned GB
+                        ramsize=$((ramsize * 1024))  # Convert to MB
+                    fi
+                    if [[ $ramtotal ]]; then
+                        ramtotal=$((ramtotal +ramsize))
+                    else
+                        ramtotal="$ramsize"
+                    fi
                 fi
             fi
-        fi
-        num=$((num +1))
-    done
+            num=$((num +1))
+        done
 
-    ramgb=$((ramtotal / 1024))
-    if [[ $ramtotal -lt 16384 ]]; then
-        ding
-        echo -e "${Error}ERROR ${Off} Not enough memory installed for deduplication: $ramgb GB"
-        exit 1
+        ramgb=$((ramtotal / 1024))
+        if [[ $ramtotal -lt 16384 ]]; then
+            ding
+            echo -e "${Error}ERROR ${Off} Not enough memory installed for deduplication: $ramgb GB"
+            exit 1
+        else
+            echo -e "NAS has $ramgb GB of memory.\n"
+        fi
     else
-        echo -e "NAS has $ramgb GB of memory.\n"
+        ding
+        echo -e "${Error}ERROR ${Off} Unable to determine the amount of installed memory!"
+        exit 1
     fi
-else
-    ding
-    echo -e "${Error}ERROR ${Off} Unable to determine the amount of installed memory!"
-    exit 1
 fi
 
 
@@ -365,6 +367,9 @@ fi
 # Restore from backup file
 
 if [[ $restore == "yes" ]]; then
+    # Restore support_btrfs_dedupe="no"
+    synosetkeyvalue "/etc.defaults/synoinfo.conf" support_btrfs_dedupe no
+
     if [[ -f ${file}.bak ]]; then
 
         # Check if backup size matches file size
