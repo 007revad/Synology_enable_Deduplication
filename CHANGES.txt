@@ -1,3 +1,7 @@
+v1.0.11
+- Set synoinfo.conf support_btrfs_dedupe to no if --restore option used.
+- Skip memory size check if --restore option used.
+
 v1.0.10
 - Fixed bugs where script was getting the wrong amount of memory on some models.
 - Fixed bug in DSM 7.2-64570 due to dmidecode now returning memory size in GB.
