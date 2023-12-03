@@ -50,7 +50,7 @@ Options:
   -r, --restore    Restore backup to undo changes
   -h, --help       Show this help message
   -v, --version    Show the script version
-  
+
 EOF
     exit 0
 }

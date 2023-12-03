@@ -43,6 +43,8 @@ Because the bc command is not included in DSM you need to install **SynoCli misc
 
 See <a href=images/how_to_download_generic.png/>How to download the script</a> for the easiest way to download the script.
 
+Do ***NOT*** save the script to a M.2 volume. The M.2 volume won't be available until after the script has run.
+
 ## How to run the script
 
 ### Running the script via SSH
