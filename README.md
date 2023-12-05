@@ -18,6 +18,10 @@ Works for DSM from 7.01 and later. As for which models it will work with, I don'
 | DS3622xs+    | DSM 7.2-64561            |
 | DS3622xs+    | DSM 7.2-64216 Beta       |
 | RS4021xs+    | DSM 7.1.1-42962 Update 2 |
+| DS1821+      | DSM 7.2.1-69057 Update 1 |
+| DS1821+      | DSM 7.2.1-69057          |
+| DS1821+      | DSM 7.2-64570 Update 1, 2 and 3 |
+| DS1821+      | DSM 7.2-64570            |
 | DS1821+      | DSM 7.2-64561            |
 | DS1821+      | DSM 7.2-64216 Beta       |
 | DS1821+      | <a href=known_issues.md>DSM 7.2-64213 Beta *</a>  |
