@@ -13,6 +13,8 @@ Enable data deduplication with non-Synology SSDs and unsupported NAS models
 - Works for DSM from 7.01 and later.
 - Does ***NOT*** work for M.2 drives in a PCIe adapter card (E10M20-T1, M2D20, M2D18 or M2D17).
 
+It works on [Synology models that do offically support data deduplication](https://kb.synology.com/en-br/DSM/tutorial/Which_models_support_data_deduplication).
+
 I'm not sure which Synology NAS models it will work with. It does work on models not listed by Synology as supported for data deduplication, as long as they have 16GB of memory or more.
 
 **Confirmed working on:**
@@ -21,7 +23,7 @@ I'm not sure which Synology NAS models it will work with. It does work on models
 | ------------ |--------------------------|
 | DS3622xs+    | DSM 7.2-64561            |
 | RS4021xs+    | DSM 7.1.1-42962 Update 2 |
-| DS1821+      | DSM 7.2.1-69057 Update 1 |
+| DS1821+      | DSM 7.2.1-69057 Update 1, 2 and 3 |
 | DS1821+      | DSM 7.2.1-69057          |
 | DS1821+      | DSM 7.2-64570 Update 1, 2 and 3 |
 | DS1821+      | DSM 7.2-64570            |
