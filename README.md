@@ -9,7 +9,11 @@
 
 Enable data deduplication with non-Synology SSDs and unsupported NAS models
 
-Works for DSM from 7.01 and later. As for which models it will work with, I don't know yet. It does work on models not listed by Synology as supported for data deduplication, as long as they have 16GB of memory or more.
+- Works for SATA, SAS and M.2 SSD drives.
+- Works for DSM from 7.01 and later.
+- Does ***NOT*** work for M.2 drives in a PCIe adapter card (E10M20-T1, M2D20, M2D18 or M2D17).
+
+I'm not sure which Synology NAS models it will work with. It does work on models not listed by Synology as supported for data deduplication, as long as they have 16GB of memory or more.
 
 **Confirmed working on:**
 
@@ -30,6 +34,7 @@ Works for DSM from 7.01 and later. As for which models it will work with, I don'
 - Deduplication requires 16GB of memory or more.
 - Deduplication only works on SSD volumes that are formatted in Btrfs.
 - The SSD volume needs **usage detail analysis** enabled. See [Enable and View Usage Details](https://kb.synology.com/en-us/DSM/help/DSM/StorageManager/volume_view_usage).
+- SSD drive(s) in drive bays or internal M.2 slot(s).
 
 Because the bc command is not included in DSM you need to install **SynoCli misc. Tools** from SynoCommunity for this script to work.
 
