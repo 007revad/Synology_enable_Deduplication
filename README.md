@@ -15,7 +15,7 @@ Enable data deduplication with non-Synology SSDs and unsupported NAS models
 
 It works on [Synology models that do offically support data deduplication](https://kb.synology.com/en-br/DSM/tutorial/Which_models_support_data_deduplication).
 
-It works on other models with one of following [CPU architectures](https://kb.synology.com/en-nz/DSM/tutorial/What_kind_of_CPU_does_my_NAS_have): R1000, Geminilake, Broadwellnk, V1000, Apollolake
+It works on other models with one of following [CPU architectures](https://kb.synology.com/en-nz/DSM/tutorial/What_kind_of_CPU_does_my_NAS_have): R1000, Geminilake, V1000, Apollolake and some Broadwellnk.
 
 It may work for other Synology NAS models.
 
@@ -23,18 +23,32 @@ Please [leave a comment in this discussion](https://github.com/007revad/Synology
 
 ### Confirmed working on
 
-| Model      | CPU Arch | DSM version              | Works | Notes |
-|------------|----------|--------------------------|-------|-------|
-| DS3622xs+  | Broadwellnk | DSM 7.2-64561            | yes | |
-| RS4021xs+  | Broadwellnk | DSM 7.1.1-42962 Update 2 | yes | |
-| DS1821+    | V1000 | DSM 7.2.1-69057 Update 1, 2 and 3 | yes | |
-| DS1821+    | V1000 | DSM 7.2.1-69057          | yes | |
-| DS1821+    | V1000 | DSM 7.2-64570 Update 1, 2 and 3 | yes | |
-| DS1821+    | V1000 | DSM 7.2-64570            | yes | |
-| DS1821+    | V1000 | DSM 7.2-64561            | yes | |
-| DS1821+    | V1000 | DSM 7.1.1-42962 Update 4 | yes | |
-| DS1618+    | Denverton | DSM 7.2-64570 Update 3 | **No** | Denverton not supported? |
-
+| Model      | CPU Arch    | DSM version                       | Works  | Notes |
+|------------|-------------|-----------------------------------|--------|-------|
+| DS923+     | R1000       | DSM 7.2-64570 Update 1, 2 and 3   | yes    | |
+| DS923+     | R1000       | DSM 7.2-64570                     | yes    | |
+| DS3622xs+  | Broadwellnk | DSM 7.2-64570                     | **No** | |
+| DS3622xs+  | Broadwellnk | DSM 7.2-64561                     | yes    | |
+| DS3622xs+  | Broadwellnk | DSM 7.1.1-42962 Update 1          | **No** | |
+| RS4021xs+  | Broadwellnk | DSM 7.2-64570                     | **No** | |
+| RS4021xs+  | Broadwellnk | DSM 7.1.1-42962 Update 2          | yes    | |
+| DS1821+    | V1000       | DSM 7.2.1-69057 Update 1, 2 and 3 | yes    | |
+| DS1821+    | V1000       | DSM 7.2.1-69057                   | yes    | |
+| DS1821+    | V1000       | DSM 7.2-64570 Update 1, 2 and 3   | yes    | |
+| DS1821+    | V1000       | DSM 7.2-64570                     | yes    | |
+| DS1821+    | V1000       | DSM 7.2-64561                     | yes    | |
+| DS1821+    | V1000       | DSM 7.1.1-42962 Update 4          | yes    | |
+| DS1621xs+  | Broadwellnk | DSM 7.2-64570                     | yes    | |
+| DS920+     | Geminilake  | DSM 7.2-64570 Update 1, 2 and 3   | yes    | |
+| DS920+     | Geminilake  | DSM 7.2-64570                     | yes    | |
+| DS720+     | Geminilake  | DSM 7.2-64570 Update 1, 2 and 3   | yes    | |
+| DS720+     | Geminilake  | DSM 7.2-64570                     | yes    | |
+| DS1019+    | Apollolake  | DSM 7.2-64570 Update 1, 2 and 3   | yes    | |
+| DS1019+    | Apollolake  | DSM 7.2-64570                     | yes    | |
+| DS1618+    | Denverton   |                                   | **No** | Denverton not supported |
+| DS918+     | Apollolake  | DSM 7.2-64570 Update 1, 2 and 3   | yes    | |
+| DS918+     | Apollolake  | DSM 7.2-64570                     | yes    | |
+| DS3617xs   | Broadwell   |                                   | **No** | Broadwell not supported |
 
 ## Requirements
 
