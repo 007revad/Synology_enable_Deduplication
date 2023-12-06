@@ -38,6 +38,7 @@ Please [leave a comment in this discussion](https://github.com/007revad/Synology
 | DS1821+    | V1000       | DSM 7.2-64570                     | yes    | |
 | DS1821+    | V1000       | DSM 7.2-64561                     | yes    | |
 | DS1821+    | V1000       | DSM 7.1.1-42962 Update 4          | yes    | |
+| DS1621xs+  | Broadwellnk | DSM 7.2-64570 Update 3            | yes    | |
 | DS1621xs+  | Broadwellnk | DSM 7.2-64570                     | yes    | |
 | DS920+     | Geminilake  | DSM 7.2-64570 Update 1, 2 and 3   | yes    | |
 | DS920+     | Geminilake  | DSM 7.2-64570                     | yes    | |
