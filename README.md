@@ -19,7 +19,7 @@ It works on other models with one of following [CPU architectures](https://kb.sy
 
 It may work for other Synology NAS models.
 
-Please [leave a comment in this discussion](https://github.com/007revad/Synology_enable_Deduplication/discussions/31) if it works, or doens't work, for you.
+Please [leave a comment in this discussion](https://github.com/007revad/Synology_enable_Deduplication/discussions/31) if it works, or doesn't work, for you.
 
 ### Confirmed working on
 
