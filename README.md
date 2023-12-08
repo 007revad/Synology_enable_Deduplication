@@ -9,26 +9,54 @@
 
 Enable data deduplication with non-Synology SSDs and unsupported NAS models
 
-Works for DSM from 7.01 and later. As for which models it will work with, I don't know yet. It does work on models not listed by Synology as supported for data deduplication, as long as they have 16GB of memory or more.
+- Works for any brand SATA SSD, SAS SSD and M.2 SSD drives.
+- Works for DSM from 7.01 and later.
+- Does ***NOT*** work for M.2 drives in a PCIe adapter card (E10M20-T1, M2D20, M2D18 or M2D17).
 
-**Confirmed working on:**
+It works on [Synology models that do offically support data deduplication](https://kb.synology.com/en-br/DSM/tutorial/Which_models_support_data_deduplication).
 
-| Model        | DSM version              |
-| ------------ |--------------------------|
-| DS3622xs+    | DSM 7.2-64561            |
-| DS3622xs+    | DSM 7.2-64216 Beta       |
-| RS4021xs+    | DSM 7.1.1-42962 Update 2 |
-| DS1821+      | DSM 7.2-64561            |
-| DS1821+      | DSM 7.2-64216 Beta       |
-| DS1821+      | <a href=known_issues.md>DSM 7.2-64213 Beta *</a>  |
-| DS1821+      | DSM 7.1.1-42962 Update 4 |
+It works on other models with one of following [CPU architectures](https://kb.synology.com/en-nz/DSM/tutorial/What_kind_of_CPU_does_my_NAS_have): R1000, Geminilake, V1000, Apollolake and some Broadwellnk.
 
+It may work for other Synology NAS models.
+
+Please [leave a comment in this discussion](https://github.com/007revad/Synology_enable_Deduplication/discussions/31) if it works, or doesn't work, for you.
+
+### Confirmed working on
+
+| Model      | CPU Arch    | DSM version                       | Works  | Notes |
+|------------|-------------|-----------------------------------|--------|-------|
+| DS923+     | R1000       | DSM 7.2-64570 Update 1, 2 and 3   | yes    | |
+| DS923+     | R1000       | DSM 7.2-64570                     | yes    | |
+| DS3622xs+  | Broadwellnk | DSM 7.2-64570                     | **No** | |
+| DS3622xs+  | Broadwellnk | DSM 7.2-64561                     | yes    | |
+| DS3622xs+  | Broadwellnk | DSM 7.1.1-42962 Update 1          | **No** | |
+| RS4021xs+  | Broadwellnk | DSM 7.2-64570                     | **No** | |
+| RS4021xs+  | Broadwellnk | DSM 7.1.1-42962 Update 2          | yes    | |
+| DS1821+    | V1000       | DSM 7.2.1-69057 Update 1, 2 and 3 | yes    | |
+| DS1821+    | V1000       | DSM 7.2.1-69057                   | yes    | |
+| DS1821+    | V1000       | DSM 7.2-64570 Update 1, 2 and 3   | yes    | |
+| DS1821+    | V1000       | DSM 7.2-64570                     | yes    | |
+| DS1821+    | V1000       | DSM 7.2-64561                     | yes    | |
+| DS1821+    | V1000       | DSM 7.1.1-42962 Update 4          | yes    | |
+| DS1621xs+  | Broadwellnk | DSM 7.2-64570 Update 3            | yes    | |
+| DS1621xs+  | Broadwellnk | DSM 7.2-64570                     | yes    | |
+| DS920+     | Geminilake  | DSM 7.2-64570 Update 1, 2 and 3   | yes    | |
+| DS920+     | Geminilake  | DSM 7.2-64570                     | yes    | |
+| DS720+     | Geminilake  | DSM 7.2-64570 Update 1, 2 and 3   | yes    | |
+| DS720+     | Geminilake  | DSM 7.2-64570                     | yes    | |
+| DS1019+    | Apollolake  | DSM 7.2-64570 Update 1, 2 and 3   | yes    | |
+| DS1019+    | Apollolake  | DSM 7.2-64570                     | yes    | |
+| DS1618+    | Denverton   |                                   | **No** | Denverton not supported |
+| DS918+     | Apollolake  | DSM 7.2-64570 Update 1, 2 and 3   | yes    | |
+| DS918+     | Apollolake  | DSM 7.2-64570                     | yes    | |
+| DS3617xs   | Broadwell   |                                   | **No** | Broadwell not supported |
 
 ## Requirements
 
 - Deduplication requires 16GB of memory or more.
 - Deduplication only works on SSD volumes that are formatted in Btrfs.
 - The SSD volume needs **usage detail analysis** enabled. See [Enable and View Usage Details](https://kb.synology.com/en-us/DSM/help/DSM/StorageManager/volume_view_usage).
+- SSD drive(s) in drive bays or internal M.2 slot(s).
 
 Because the bc command is not included in DSM you need to install **SynoCli misc. Tools** from SynoCommunity for this script to work.
 
