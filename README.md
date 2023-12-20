@@ -79,7 +79,7 @@ sudo -i /volume1/scripts/syno_enable_dedupe.sh
 ```YAML
   -c, --check           Check value in file and backup file
   -r, --restore         Undo all changes made by the script
-  -e, --email           Disable colored text in output scheduler emails.
+  -e, --email           Disable colored text in output for scheduler emails.
       --autoupdate=AGE  Auto update script (useful when script is scheduled)
                           AGE is how many days old a release must be before
                           auto-updating. AGE must be a number: 0 or greater
