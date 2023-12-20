@@ -5,6 +5,7 @@ v1.2.12
 - Added autoupdate option.
 - Added email option for cleaner emails from task scheduler.
 - Changed to restore synoinfo.conf settings from settings in backup file.
+- Now warns you if script is located on an NVMe drive.
 
 v1.0.11
 - Set synoinfo.conf support_btrfs_dedupe to no if --restore option used.
