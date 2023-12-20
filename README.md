@@ -10,9 +10,9 @@
 Enable data deduplication with non-Synology SSDs and unsupported NAS models
 
 - Works for any brand SATA SSD, SAS SSD and M.2 SSD drives.
-- Now works for HDDs too.
-- Now works for M.2 drives in a PCIe adapter card (E10M20-T1, M2D20, M2D18 or M2D17).
-- Works for DSM from 7.01 and later.
+- Works for DSM 7.01 and later.
+- Now works for HDDs in DSM 7.2.1 and later.
+- Now works for M.2 drives in a PCIe adapter card (E10M20-T1, M2D20, M2D18 or M2D17) in DSM 7.2.1 and later.
 
 It works on [Synology models that do offically support data deduplication](https://kb.synology.com/en-global/DSM/tutorial/Which_models_support_data_deduplication).
 
