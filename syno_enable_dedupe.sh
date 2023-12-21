@@ -9,7 +9,7 @@
 # sudo /volume1/scripts/syno_enable_dedupe.sh
 #-------------------------------------------------------------------------------
 
-scriptver="v1.1.12"
+scriptver="v1.1.13"
 script=Synology_enable_Deduplication
 repo="007revad/Synology_enable_Deduplication"
 
@@ -65,8 +65,8 @@ args=("$@")
 autoupdate=""
 
 # Check for flags with getopt
-if options="$(getopt -o abcdefghijklmnopqrstuvwxyz0123456789 -a \
-    -l skip,check,restore,help,version,email,autoupdate,log,debug -- "$@")"; then
+if options="$(getopt -o abcdefghijklmnopqrstuvwxyz0123456789 -l \
+    skip,check,restore,help,version,email,autoupdate:,log,debug -- "$@")"; then
     eval set -- "$options"
     while true; do
         case "${1,,}" in
