@@ -127,3 +127,5 @@ Here's the result after running the script and rebooting. Note that the DS1821+ 
 <p align="center">Deduplications works.</p>
 <p align="center"><img src="/images/6b_ds1821+_dedupe_works.png"></p>
 
+<p align="center">Deduplication for HDDs too.</p>
+<p align="center"><img src="/images/hdd_dedupe.png"></p>
