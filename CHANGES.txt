@@ -1,4 +1,4 @@
-v1.1.12
+v1.1.13
 - Now works for HDDs.
 - Now works for M.2 drives in a PCIe adapter card (E10M20-T1, M2D20, M2D18 or M2D17).
 - Removed the need for bc by using xargs instead.
@@ -6,6 +6,7 @@ v1.1.12
 - Added email option for cleaner emails from task scheduler.
 - Changed to restore synoinfo.conf settings from settings in backup file.
 - Now warns you if script is located on an NVMe drive.
+- Bug fix autoupdate.
 
 v1.0.11
 - Set synoinfo.conf support_btrfs_dedupe to no if --restore option used.
