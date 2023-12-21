@@ -9,13 +9,13 @@
 
 Enable data deduplication with non-Synology SSDs and unsupported NAS models
 
-- Works for any brand SATA SSD, SAS SSD and M.2 SSD drives.
-- Works for DSM from 7.01 and later.
-- Does ***NOT*** work for M.2 drives in a PCIe adapter card (E10M20-T1, M2D20, M2D18 or M2D17).
+- Works for any brand SATA SSD, SAS SSD and M.2 SSD drives in DSM 7.01 and later.
+- Now works for HDDs in DSM 7.2.1 and later.
+- Now works for M.2 drives in a PCIe adapter card (E10M20-T1, M2D20, M2D18 or M2D17) in DSM 7.2.1 and later.
 
-It works on [Synology models that do offically support data deduplication](https://kb.synology.com/en-br/DSM/tutorial/Which_models_support_data_deduplication).
+It works on [Synology models that do offically support data deduplication](https://kb.synology.com/en-global/DSM/tutorial/Which_models_support_data_deduplication).
 
-It works on other models with one of following [CPU architectures](https://kb.synology.com/en-nz/DSM/tutorial/What_kind_of_CPU_does_my_NAS_have): R1000, Geminilake, V1000, Apollolake and some Broadwellnk.
+It works on other models with one of following [CPU architectures](https://kb.synology.com/en-global/DSM/tutorial/What_kind_of_CPU_does_my_NAS_have): R1000, Geminilake, V1000, Apollolake and some Broadwellnk.
 
 It may work for other Synology NAS models.
 
@@ -55,23 +55,14 @@ Please [leave a comment in this discussion](https://github.com/007revad/Synology
 
 - Deduplication requires 16GB of memory or more.
 - Deduplication only works on SSD volumes that are formatted in Btrfs.
-- The SSD volume needs **usage detail analysis** enabled. See [Enable and View Usage Details](https://kb.synology.com/en-us/DSM/help/DSM/StorageManager/volume_view_usage).
+- The SSD volume needs **usage detail analysis** enabled. See [Enable and View Usage Details](https://kb.synology.com/en-global/DSM/help/DSM/StorageManager/volume_view_usage?version=7).
 - SSD drive(s) in drive bays or internal M.2 slot(s).
-
-Because the bc command is not included in DSM you need to install **SynoCli misc. Tools** from SynoCommunity for this script to work.
-
-1. Package Center > Settings > Package Sources > Add
-2. Name: SynoCommunity
-3. Location: `https://packages.synocommunity.com/`
-4. Click OK and OK again.
-5. Click Community on the left.
-6. Install **SynoCli misc. Tools**
 
 ## Download the script
 
 See <a href=images/how_to_download_generic.png/>How to download the script</a> for the easiest way to download the script.
 
-Do ***NOT*** save the script to a M.2 volume. The M.2 volume won't be available until after the script has run.
+Do ***NOT*** save the script to a M.2 volume. After a DSM or Storage Manager update the M.2 volume won't be available until after the script has run.
 
 ## How to run the script
 
@@ -85,10 +76,15 @@ sudo -i /volume1/scripts/syno_enable_dedupe.sh
 
 **Options:**
 ```YAML
-  -c, --check      Check value in file and backup file
-  -r, --restore    Restore backup to undo changes
-  -h, --help       Show this help message
-  -v, --version    Show the script version
+  -c, --check           Check value in file and backup file
+  -r, --restore         Undo all changes made by the script
+  -e, --email           Disable colored text in output for scheduler emails.
+      --autoupdate=AGE  Auto update script (useful when script is scheduled)
+                          AGE is how many days old a release must be before
+                          auto-updating. AGE must be a number: 0 or greater
+  -s, --skip            Skip memory amount check (for testing)
+  -h, --help            Show this help message
+  -v, --version         Show the script version
 ```
 
 **Extra Steps:**
@@ -131,3 +127,5 @@ Here's the result after running the script and rebooting. Note that the DS1821+ 
 <p align="center">Deduplications works.</p>
 <p align="center"><img src="/images/6b_ds1821+_dedupe_works.png"></p>
 
+<p align="center">Deduplication for HDDs too.</p>
+<p align="center"><img src="/images/hdd_dedupe.png"></p>
