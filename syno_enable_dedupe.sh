@@ -9,7 +9,7 @@
 # sudo /volume1/scripts/syno_enable_dedupe.sh
 #-------------------------------------------------------------------------------
 
-scriptver="v1.1.13"
+scriptver="v1.2.14"
 script=Synology_enable_Deduplication
 repo="007revad/Synology_enable_Deduplication"
 
@@ -35,6 +35,8 @@ Usage: $(basename "$0") [options]
 Options:
   -c, --check           Check value in file and backup file
   -r, --restore         Undo all changes made by the script
+  -t, --tiny            Enable tiny data deduplication (only needs 4GB RAM)
+                          DSM 7.2.1 and later only
   -e, --email           Disable colored text in output for scheduler emails.
       --autoupdate=AGE  Auto update script (useful when script is scheduled)
                           AGE is how many days old a release must be before
@@ -66,7 +68,7 @@ autoupdate=""
 
 # Check for flags with getopt
 if options="$(getopt -o abcdefghijklmnopqrstuvwxyz0123456789 -l \
-    skip,check,restore,help,version,email,autoupdate:,log,debug -- "$@")"; then
+    skip,check,restore,help,version,tiny,email,autoupdate:,log,debug -- "$@")"; then
     eval set -- "$options"
     while true; do
         case "${1,,}" in
@@ -75,6 +77,9 @@ if options="$(getopt -o abcdefghijklmnopqrstuvwxyz0123456789 -l \
                 ;;
             -v|--version)       # Show script version
                 scriptversion
+                ;;
+            -t|--tiny)          # Enable tiny deduplication
+                tiny=yes
                 ;;
             -s|--skip)          # Skip memory amount check (for testing)
                 skip=yes
@@ -195,6 +200,12 @@ if [[ $major$minor$micro -lt "701" ]]; then
     #echo "This script only works for DSM 7.0.1 and later."
     echo "Btrfs Data Deduplication only works in DSM 7.0.1 and later."
     exit 1
+fi
+
+# Check model (and DSM version for that model) supports dedupe
+ if [[ ! -f /usr/lib/libsynobtrfsdedupe.so.7 ]]; then
+    echo "You model or DSM version does not support Btrfs Data Deduplication."
+    exit
 fi
 
 
@@ -431,6 +442,15 @@ rebootmsg(){
     fi
 }
 
+reloadmsg(){ 
+    # Reload browser prompt
+    echo -e "\nFinished"
+    echo -e "\nIf you have Storage Manager open already you need to:"
+    echo "   1. Close Storage Manager."
+    echo "   2. Refresh the browser window or tab."
+    exit
+}
+
 
 #----------------------------------------------------------
 # Restore changes from backup file
@@ -454,7 +474,7 @@ compare_md5(){
 if [[ $restore == "yes" ]]; then
     echo ""
     if [[ -f ${synoinfo}.bak ]] || [[ -f ${libhw}.bak ]] ||\
-        [[ -f ${strgmgr}.${strgmgrver} ]]; then
+        [[ -f ${strgmgr}.${storagemgrver} ]]; then
 
         # Restore synoinfo.conf from backup
         if [[ -f ${synoinfo}.bak ]]; then
@@ -470,14 +490,21 @@ if [[ $restore == "yes" ]]; then
                         echo "Restored ${keyvalues[v]} = $defaultval"
                     fi
                 fi
+                synosetkeyvalue "$synoinfo2" "${keyvalues[v]}" "$defaultval"
             done
         fi
 
         # Restore storage_panel.js from backup
-        strgmgrver="$(synopkg version StorageManager)"
-        if [[ -f "${strgmgr}.$strgmgrver" ]]; then
-            if ! compare_md5 "${strgmgr}.$strgmgrver" "${strgmgr}"; then
-                if cp -p "${strgmgr}.$strgmgrver" "$strgmgr"; then
+        if [[ -f "${strgmgr}.$storagemgrver" ]]; then
+            string1="(SYNO.SDS.StorageUtils.supportBtrfsDedupe)"
+            string2="(SYNO.SDS.StorageUtils.supportBtrfsDedupe&&e.dedup_info.show_config_btn)"
+
+            if grep -o "string1" "${strgmgr}" >/dev/null; then
+                # Restore string in file
+                sed -i "s/${string1}/${string2/&&/\\&\\&}/g" "$strgmgr"
+
+                # Check we restored string in file
+                if grep -o "string2" "${strgmgr}" >/dev/null; then
                     restored="yes"
                     echo "Restored $(basename -- "$strgmgr")"
                 else
@@ -489,37 +516,40 @@ if [[ $restore == "yes" ]]; then
             echo "No backup of $(basename -- "$strgmgr") found."
         fi
 
-        if [[ -f "${libhw}.bak" ]]; then
-            # Check if backup libhwcontrol size matches
-            # in case backup is from previous DSM version
-            filesize=$(wc -c "${libhw}" | awk '{print $1}')
-            filebaksize=$(wc -c "${libhw}.bak" | awk '{print $1}')
-            if [[ ! $filesize -eq "$filebaksize" ]]; then
-                echo -e "${Yellow}WARNING Backup file size is different to file!${Off}"
-                echo "Do you want to restore this backup? [yes/no]:"
-                read -r -t 20 answer
-                if [[ $answer != "yes" ]]; then
-                    exit
+        if [[ -z "$storagemgrver" ]]; then  # Is not DSM 7.2.1 or later
+            if [[ -f "${libhw}.bak" ]]; then
+                # Check if backup libhwcontrol size matches
+                # in case backup is from previous DSM version
+                filesize=$(wc -c "${libhw}" | awk '{print $1}')
+                filebaksize=$(wc -c "${libhw}.bak" | awk '{print $1}')
+                if [[ ! $filesize -eq "$filebaksize" ]]; then
+                    echo -e "${Yellow}WARNING Backup file size is different to file!${Off}"
+                    echo "Do you want to restore this backup? [yes/no]:"
+                    read -r -t 20 answer
+                    if [[ $answer != "yes" ]]; then
+                        exit
+                    fi
                 fi
-            fi
-            # Restore from backup
-            if ! compare_md5 "$libhw".bak "$libhw"; then
-                if cp -p "$libhw".bak "$libhw" ; then
-                    restored="yes"
-                    echo "Restored $(basename -- "$libhw")"
-                else
-                    restoreerr=1
-                    echo -e "${Error}ERROR${Off} Failed to restore $(basename -- "$libhw")!"
+                # Restore from backup
+                if ! compare_md5 "$libhw".bak "$libhw"; then
+                    if cp -p "$libhw".bak "$libhw" ; then
+                        restored="yes"
+                        reboot="yes"
+                        echo "Restored $(basename -- "$libhw")"
+                    else
+                        restoreerr=1
+                        echo -e "${Error}ERROR${Off} Failed to restore $(basename -- "$libhw")!"
+                    fi
                 fi
+            else
+                echo "No backup of $(basename -- "$libhw") found."
             fi
-        else
-            echo "No backup of $(basename -- "$libhw") found."
         fi
 
         if [[ -z $restoreerr ]]; then
-
             if [[ $restored == "yes" ]]; then
                 echo -e "\nRestore successful."
+                reloadmsg
             else
                 echo -e "Nothing to restore."
             fi
@@ -529,7 +559,7 @@ if [[ $restore == "yes" ]]; then
             rebootmsg
         fi
     else
-        echo -e "Nothing to restore."
+        echo -e "No backups to restore from."
     fi
     exit
 fi
@@ -563,7 +593,22 @@ if [[ $restore != "yes" ]] && [[ $skip != "yes" ]]; then
         done
 
         ramgb=$((ramtotal / 1024))
-        if [[ $ramtotal -lt 16384 ]]; then
+
+        if [[ $storagemgrver ]]; then
+            # Only DSM 7.2.1 and later supports tiny dedupe
+            if [[ $tiny == "yes" ]] || [[ $ramtotal -lt 16384 ]]; then
+                ramneeded="4096"  # Tiny dedupe only needs 4GB ram
+                tiny="yes"
+            else
+                ramneeded="16384"  # Needs 16GB ram
+                tiny=""
+            fi
+        else
+            ramneeded="16384"  # Needs 16GB ram
+            tiny=""
+        fi
+
+        if [[ $ramtotal -lt "$ramneeded" ]]; then
             ding
             echo -e "\n${Error}ERROR${Off} Not enough memory installed for deduplication: $ramgb GB"
             exit 1
@@ -645,20 +690,24 @@ if [[ $check == "yes" ]]; then
     sbtd=support_tiny_btrfs_dedupe
     setting="$(get_key_value "$synoinfo" ${sbd})"
     setting2="$(get_key_value "$synoinfo" ${sbtd})"
-    if [[ $setting == "yes" ]]; then
-        echo -e "\nBtrfs Data Deduplication is enabled."
+    if [[ $tiny != "yes" ]] || [[ $ramtotal -lt 16384 ]]; then
+        if [[ $setting == "yes" ]]; then
+            echo -e "\nBtrfs Data Deduplication is enabled."
+        else
+            echo -e "\nBtrfs Data Deduplication is ${Cyan}not${Off} enabled."
+        fi
     else
-        echo -e "\nBtrfs Data Deduplication is ${Cyan}not${Off} enabled."
-    fi
-    if [[ $setting2 == "yes" ]]; then
-        echo -e "\nTiny Btrfs Data Deduplication is enabled."
-    else
-        echo -e "\nTiny Btrfs Data Deduplication is ${Cyan}not${Off} enabled."
+        if [[ $setting2 == "yes" ]]; then
+            echo -e "\nTiny Btrfs Data Deduplication is enabled."
+        else
+            echo -e "\nTiny Btrfs Data Deduplication is ${Cyan}not${Off} enabled."
+        fi
     fi
 
 
+    # DSM 7.2.1 only
     # Dedupe config button for HDDs and 2.5 inch SSDs in DSM 7.2.1
-    if [[ -f "$strgmgr" ]]; then
+    if [[ -f "$strgmgr" ]]; then  # Is DSM 7.2.1 or later
         # StorageManager package is installed
         if ! grep '&&e.dedup_info.show_config_btn' "$strgmgr" >/dev/null; then
             echo -e "\nDedupe config menu for HDDs and 2.5\" SSDs already enabled."
@@ -667,42 +716,45 @@ if [[ $check == "yes" ]]; then
         fi
     fi
 
-    # Check value in file
-    echo -e "\nChecking non-Synology drive supported."
-    hexstring="80 3E 00 B8 01 00 00 00 90 90 48 8B"
-    findbytes "$libhw"
-    if [[ $bytes == "9090" ]]; then
-        echo -e "File is already edited."
-    else
-        hexstring="80 3E 00 B8 01 00 00 00 75 2. 48 8B"
+    # DSM 7.0.1 to 7.2 only
+    if [[ -z "$storagemgrver" ]]; then  # Is not DSM 7.2.1 or later
+        # Check value in file
+        echo -e "\nChecking non-Synology drive supported."
+        hexstring="80 3E 00 B8 01 00 00 00 90 90 48 8B"
         findbytes "$libhw"
-        if [[ $bytes =~ "752"[0-9] ]]; then
-            echo -e "File is ${Cyan}not${Off} edited."
+        if [[ $bytes == "9090" ]]; then
+            echo -e "File is already edited."
         else
-            echo -e "${Red}hex string not found!${Off}"
-            err=1
-        fi
-    fi
-
-    # Check value in backup file
-    if [[ -f ${libhw}.bak ]]; then
-        echo -e "\nChecking value in backup file."
-        hexstring="80 3E 00 B8 01 00 00 00 75 2. 48 8B"
-        findbytes "${libhw}.bak"
-        if [[ $bytes =~ "752"[0-9] ]]; then
-            echo -e "Backup file is okay."
-        else
-            hexstring="80 3E 00 B8 01 00 00 00 90 90 48 8B"
-            findbytes "${libhw}.bak"
-            if [[ $bytes == "9090" ]]; then
-                echo -e "${Red}Backup file has been edited!${Off}"
+            hexstring="80 3E 00 B8 01 00 00 00 75 2. 48 8B"
+            findbytes "$libhw"
+            if [[ $bytes =~ "752"[0-9] ]]; then
+                echo -e "File is ${Cyan}not${Off} edited."
             else
                 echo -e "${Red}hex string not found!${Off}"
                 err=1
             fi
         fi
-    else
-        echo "No backup file found."
+
+        # Check value in backup file
+        if [[ -f ${libhw}.bak ]]; then
+            echo -e "\nChecking value in backup file."
+            hexstring="80 3E 00 B8 01 00 00 00 75 2. 48 8B"
+            findbytes "${libhw}.bak"
+            if [[ $bytes =~ "752"[0-9] ]]; then
+                echo -e "Backup file is okay."
+            else
+                hexstring="80 3E 00 B8 01 00 00 00 90 90 48 8B"
+                findbytes "${libhw}.bak"
+                if [[ $bytes == "9090" ]]; then
+                    echo -e "${Red}Backup file has been edited!${Off}"
+                else
+                    echo -e "${Red}hex string not found!${Off}"
+                    err=1
+                fi
+            fi
+        else
+            echo "No backup file found."
+        fi
     fi
 
     exit "$err"
@@ -710,25 +762,10 @@ fi
 
 
 #----------------------------------------------------------
-# Backup libhwcontrol
+# Backup libhwcontrol - DSM 7.0.1 to 7.2 only
 
-if [[ ! -f ${libhw}.bak ]]; then
-    if cp -p "$libhw" "$libhw".bak ; then
-        echo "Backup successful."
-    else
-        ding
-        echo -e "${Error}ERROR${Off} Backup failed!"
-        exit 1
-    fi
-else
-    # Check if backup size matches file size
-    filesize=$(wc -c "$libhw" | awk '{print $1}')
-    filebaksize=$(wc -c "${libhw}.bak" | awk '{print $1}')
-    if [[ ! $filesize -eq "$filebaksize" ]]; then
-        echo -e "${Yellow}WARNING Backup file size is different to file!${Off}"
-        echo "Maybe you've updated DSM since last running this script?"
-        echo "Renaming file.bak to file.bak.old"
-        mv "${libhw}.bak" "$libhw".bak.old
+if [[ -z "$storagemgrver" ]]; then  # Is not DSM 7.2.1 or later
+    if [[ ! -f ${libhw}.bak ]]; then
         if cp -p "$libhw" "$libhw".bak ; then
             echo "Backup successful."
         else
@@ -736,54 +773,72 @@ else
             echo -e "${Error}ERROR${Off} Backup failed!"
             exit 1
         fi
-    #else
-    #    echo "$(basename -- "$libhw") already backed up."
+    else
+        # Check if backup size matches file size
+        filesize=$(wc -c "$libhw" | awk '{print $1}')
+        filebaksize=$(wc -c "${libhw}.bak" | awk '{print $1}')
+        if [[ ! $filesize -eq "$filebaksize" ]]; then
+            echo -e "${Yellow}WARNING Backup file size is different to file!${Off}"
+            echo "Maybe you've updated DSM since last running this script?"
+            echo "Renaming file.bak to file.bak.old"
+            mv "${libhw}.bak" "$libhw".bak.old
+            if cp -p "$libhw" "$libhw".bak ; then
+                echo "Backup successful."
+            else
+                ding
+                echo -e "${Error}ERROR${Off} Backup failed!"
+                exit 1
+            fi
+        #else
+        #    echo "$(basename -- "$libhw") already backed up."
+        fi
     fi
 fi
 
 
 #----------------------------------------------------------
-# Edit libhwcontrol
+# Edit libhwcontrol - DSM 7.0.1 to 7.2 only
 
-#echo -e "\nChecking $(basename -- "$libhw")."
+if [[ -z "$storagemgrver" ]]; then  # Is not DSM 7.2.1 or later
+    #echo -e "\nChecking $(basename -- "$libhw")."
 
-# Check if the file is already edited
-hexstring="80 3E 00 B8 01 00 00 00 90 90 48 8B"
-findbytes "$libhw"
-if [[ $bytes == "9090" ]]; then
-    #echo -e "\n$(basename -- "$libhw") already edited."
-    echo -e "\nNon-Synology drive support already enabled."
-else
-    # Check if the file is okay for editing
-    hexstring="80 3E 00 B8 01 00 00 00 75 2. 48 8B"
+    # Check if the file is already edited
+    hexstring="80 3E 00 B8 01 00 00 00 90 90 48 8B"
     findbytes "$libhw"
-    if ! [[ $bytes =~ "752"[0-9] ]]; then
-        ding
-        echo -e "\n${Red}hex string not found!${Off}"
-        exit 1
-    fi
-
-    # Replace bytes in file
-    posrep=$(printf "%x\n" $((0x${poshex}+8)))
-    if ! printf %s "${posrep}: 9090" | xxd -r - "$libhw"; then
-        ding
-        echo -e "${Error}ERROR${Off} Failed to edit $(basename -- "$libhw")!"
-        exit 1
+    if [[ $bytes == "9090" ]]; then
+        #echo -e "\n$(basename -- "$libhw") already edited."
+        echo -e "\nNon-Synology drive support already enabled."
     else
-        # Check if libhwcontrol.so.1 was successfully edited
-        #echo -e "\nChecking if file was successfully edited."
-        hexstring="80 3E 00 B8 01 00 00 00 90 90 48 8B"
+        # Check if the file is okay for editing
+        hexstring="80 3E 00 B8 01 00 00 00 75 2. 48 8B"
         findbytes "$libhw"
-        if [[ $bytes == "9090" ]]; then
-            #echo -e "File successfully edited."
-            echo -e "\nEnabled non-Synology drive support."
-            #echo -e "\n${Cyan}You can now enable data deduplication"\
-            #    "pool in Storage Manager.${Off}"
-            reboot="yes"
+        if ! [[ $bytes =~ "752"[0-9] ]]; then
+            ding
+            echo -e "\n${Red}hex string not found!${Off}"
+            exit 1
+        fi
+
+        # Replace bytes in file
+        posrep=$(printf "%x\n" $((0x${poshex}+8)))
+        if ! printf %s "${posrep}: 9090" | xxd -r - "$libhw"; then
+            ding
+            echo -e "${Error}ERROR${Off} Failed to edit $(basename -- "$libhw")!"
+            exit 1
+        else
+            # Check if libhwcontrol.so.1 was successfully edited
+            #echo -e "\nChecking if file was successfully edited."
+            hexstring="80 3E 00 B8 01 00 00 00 90 90 48 8B"
+            findbytes "$libhw"
+            if [[ $bytes == "9090" ]]; then
+                #echo -e "File successfully edited."
+                echo -e "\nEnabled non-Synology drive support."
+                #echo -e "\n${Cyan}You can now enable data deduplication"\
+                #    "pool in Storage Manager.${Off}"
+                reboot="yes"
+            fi
         fi
     fi
 fi
-
 
 #------------------------------------------------------------------------------
 # Edit /etc.defaults/synoinfo.conf
@@ -799,41 +854,52 @@ if [[ ! -f ${synoinfo}.bak ]]; then
     fi
 fi
 
+enabled=""
 
-# Check if dedupe support is enabled
+# Enable dedupe support if needed
 sbd=support_btrfs_dedupe
 setting="$(get_key_value "$synoinfo" ${sbd})"
-enabled=""
-if [[ ! $setting ]]; then
-    # Add support_btrfs_dedupe="yes"
-    synosetkeyvalue "$synoinfo" "$sbd" yes
-    synosetkeyvalue "$synoinfo2" "$sbd" yes
-    enabled="yes"
-elif [[ $setting == "no" ]]; then
-    # Change support_btrfs_dedupe="no" to "yes"
-    synosetkeyvalue "$synoinfo" "$sbd" yes
-    synosetkeyvalue "$synoinfo2" "$sbd" yes
-    enabled="yes"
-elif [[ $setting == "yes" ]]; then
-    echo -e "\nBtrfs Data Deduplication already enabled."
+if [[ $tiny != "yes" ]]; then
+    if [[ ! $setting ]] || [[ $setting == "no" ]]; then
+        synosetkeyvalue "$synoinfo" "$sbd" yes
+        synosetkeyvalue "$synoinfo2" "$sbd" yes
+        enabled="yes"
+    elif [[ $setting == "yes" ]]; then
+        echo -e "\nBtrfs Data Deduplication already enabled."
+    fi
+
+    # Disable support_tiny_btrfs_dedupe
+    if [[ $enabled == "yes" ]]; then
+        if grep "$sbtd" "$synoinfo" >/dev/null; then
+            synosetkeyvalue "$synoinfo" "$sbtd" no
+        fi
+        if grep "$sbtd" "$synoinfo2" >/dev/null; then
+            synosetkeyvalue "$synoinfo2" "$sbtd" no
+        fi
+    fi
 fi
 
-# Check if tiny dedupe support is enabled
+# Enable tiny dedupe support if needed
 sbtd=support_tiny_btrfs_dedupe
 setting="$(get_key_value "$synoinfo" ${sbtd})"
-enabled=""
-if [[ ! $setting ]]; then
-    # Add support_tiny_btrfs_dedupe="yes"
-    synosetkeyvalue "$synoinfo" "$sbtd" yes
-    synosetkeyvalue "$synoinfo2" "$sbtd" yes
-    enabled="yes"
-elif [[ $setting == "no" ]]; then
-    # Change support_tiny_btrfs_dedupe="no" to "yes"
-    synosetkeyvalue "$synoinfo" "$sbtd" yes
-    synosetkeyvalue "$synoinfo2" "$sbtd" yes
-    enabled="yes"
-elif [[ $setting == "yes" ]]; then
-    echo -e "\nTiny Btrfs Data Deduplication already enabled."
+if [[ $tiny == "yes" ]]; then
+    if [[ ! $setting ]] || [[ $setting == "no" ]]; then
+        synosetkeyvalue "$synoinfo" "$sbtd" yes
+        synosetkeyvalue "$synoinfo2" "$sbtd" yes
+        enabled="yes"
+    elif [[ $setting == "yes" ]]; then
+        echo -e "\nTiny Btrfs Data Deduplication already enabled."
+    fi
+
+    # Disable support_btrfs_dedupe
+    if [[ $enabled == "yes" ]]; then
+        if grep "$sbd" "$synoinfo" >/dev/null; then
+            synosetkeyvalue "$synoinfo" "$sbd" no
+        fi
+        if grep "$sbd" "$synoinfo2" >/dev/null; then
+            synosetkeyvalue "$synoinfo2" "$sbd" no
+        fi
+    fi
 fi
 
 
@@ -841,17 +907,22 @@ fi
 setting="$(get_key_value "$synoinfo" ${sbd})"
 setting2="$(get_key_value "$synoinfo" ${sbtd})"
 if [[ $enabled == "yes" ]]; then
-    if [[ $setting == "yes" ]]; then
-        echo -e "\nEnabled Btrfs Data Deduplication."
+    if [[ $tiny != "yes" ]]; then
+        if [[ $setting == "yes" ]]; then
+            echo -e "\nEnabled Btrfs Data Deduplication."
+            reload="yes"
+        else
+            ding
+            echo -e "\n${Error}ERROR${Off} Failed to enable Btrfs Data Deduplication!"
+        fi
     else
-        ding
-        echo -e "\n${Error}ERROR${Off} Failed to enable Btrfs Data Deduplication!"
-    fi
-    if [[ $setting2 == "yes" ]]; then
-        echo -e "\nEnabled Tiny Btrfs Data Deduplication."
-    else
-        ding
-        echo -e "\n${Error}ERROR${Off} Failed to enable Tiny Btrfs Data Deduplication!"
+        if [[ $setting2 == "yes" ]]; then
+            echo -e "\nEnabled Tiny Btrfs Data Deduplication."
+            reload="yes"
+        else
+            ding
+            echo -e "\n${Error}ERROR${Off} Failed to enable Tiny Btrfs Data Deduplication!"
+        fi
     fi
 fi
 
@@ -864,10 +935,10 @@ if [[ -f "$strgmgr" ]]; then
     # StorageManager package is installed
     if grep '&&e.dedup_info.show_config_btn' "$strgmgr" >/dev/null; then
         # Backup storage_panel.js"
-        strgmgrver="$(synopkg version StorageManager)"
+        storagemgrver="$(synopkg version StorageManager)"
         echo ""
-        if [[ ! -f "${strgmgr}.$strgmgrver" ]]; then
-            if cp -p "$strgmgr" "${strgmgr}.$strgmgrver"; then
+        if [[ ! -f "${strgmgr}.$storagemgrver" ]]; then
+            if cp -p "$strgmgr" "${strgmgr}.$storagemgrver"; then
                 echo -e "Backed up $(basename -- "$strgmgr")"
             else
                 ding
@@ -879,6 +950,7 @@ if [[ -f "$strgmgr" ]]; then
         # Check if we edited file
         if ! grep '&&e.dedup_info.show_config_btn' "$strgmgr" >/dev/null; then
             echo -e "Enabled dedupe config menu for HDDs and 2.5\" SSDs."
+            reload="yes"
         else
             ding
             echo -e "${Error}ERROR${Off} Failed to enable dedupe config menu for HDDs and 2.5\" SSDs!"
@@ -894,6 +966,8 @@ fi
 
 if [[ $reboot == "yes" ]]; then
     rebootmsg
+elif [[ $reload == "yes" ]]; then
+    reloadmsg
 else
     echo -e "\nFinished"
 fi
