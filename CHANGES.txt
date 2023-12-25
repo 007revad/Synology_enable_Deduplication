@@ -3,6 +3,7 @@ v1.2.14
 - Added model or DSM version not supported message if required files are missing.
 - Improved restore process.
 - Changes for DSM 7.2.1 only:
+  - Supports V1000, R1000, Geminilake, Broadwellnkv2, Broadwellnk, Broadwell, Purley and Epyc7002.
   - Does not require a reboot.
   - Added message at end to refresh browser.
   - If less than 16GB of memory installed enables tiny deduplication (which only needs 4GB).
