@@ -445,9 +445,8 @@ rebootmsg(){
 reloadmsg(){ 
     # Reload browser prompt
     echo -e "\nFinished"
-    echo -e "\nIf you have Storage Manager open already you need to:"
-    echo "   1. Close Storage Manager."
-    echo "   2. Refresh the browser window or tab."
+    echo -e "\nIf you have DSM open in a browser you need to"
+    echo "refresh the browser window or tab."
     exit
 }
 
@@ -499,7 +498,7 @@ if [[ $restore == "yes" ]]; then
             string1="(SYNO.SDS.StorageUtils.supportBtrfsDedupe)"
             string2="(SYNO.SDS.StorageUtils.supportBtrfsDedupe&&e.dedup_info.show_config_btn)"
 
-            if grep -o "string1" "${strgmgr}" >/dev/null; then
+            if grep -o "$string1" "${strgmgr}" >/dev/null; then
                 # Restore string in file
                 sed -i "s/${string1}/${string2/&&/\\&\\&}/g" "$strgmgr"
 
