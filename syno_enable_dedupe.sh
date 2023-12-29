@@ -9,7 +9,7 @@
 # sudo /volume1/scripts/syno_enable_dedupe.sh
 #-------------------------------------------------------------------------------
 
-scriptver="v1.2.14"
+scriptver="v1.2.15"
 script=Synology_enable_Deduplication
 repo="007revad/Synology_enable_Deduplication"
 
@@ -686,9 +686,9 @@ if [[ $check == "yes" ]]; then
 
     # Check if deduplication enabled in synoinfo.conf
     sbd=support_btrfs_dedupe
-    sbtd=support_tiny_btrfs_dedupe
+    stbd=support_tiny_btrfs_dedupe
     setting="$(get_key_value "$synoinfo" ${sbd})"
-    setting2="$(get_key_value "$synoinfo" ${sbtd})"
+    setting2="$(get_key_value "$synoinfo" ${stbd})"
     if [[ $tiny != "yes" ]] || [[ $ramtotal -lt 16384 ]]; then
         if [[ $setting == "yes" ]]; then
             echo -e "\nBtrfs Data Deduplication is enabled."
@@ -854,38 +854,42 @@ if [[ ! -f ${synoinfo}.bak ]]; then
 fi
 
 enabled=""
+sbd=support_btrfs_dedupe
+stbd=support_tiny_btrfs_dedupe
 
 # Enable dedupe support if needed
-sbd=support_btrfs_dedupe
 setting="$(get_key_value "$synoinfo" ${sbd})"
 if [[ $tiny != "yes" ]]; then
     if [[ ! $setting ]] || [[ $setting == "no" ]]; then
-        synosetkeyvalue "$synoinfo" "$sbd" yes
-        synosetkeyvalue "$synoinfo2" "$sbd" yes
-        enabled="yes"
+        if [[ -n $sbd ]]; then
+            synosetkeyvalue "$synoinfo" "$sbd" yes
+            synosetkeyvalue "$synoinfo2" "$sbd" yes
+            enabled="yes"
+        fi
     elif [[ $setting == "yes" ]]; then
         echo -e "\nBtrfs Data Deduplication already enabled."
     fi
 
     # Disable support_tiny_btrfs_dedupe
     if [[ $enabled == "yes" ]]; then
-        if grep "$sbtd" "$synoinfo" >/dev/null; then
-            synosetkeyvalue "$synoinfo" "$sbtd" no
+        if grep "$stbd" "$synoinfo" >/dev/null; then
+            synosetkeyvalue "$synoinfo" "$stbd" no
         fi
-        if grep "$sbtd" "$synoinfo2" >/dev/null; then
-            synosetkeyvalue "$synoinfo2" "$sbtd" no
+        if grep "$stbd" "$synoinfo2" >/dev/null; then
+            synosetkeyvalue "$synoinfo2" "$stbd" no
         fi
     fi
 fi
 
 # Enable tiny dedupe support if needed
-sbtd=support_tiny_btrfs_dedupe
-setting="$(get_key_value "$synoinfo" ${sbtd})"
+setting="$(get_key_value "$synoinfo" ${stbd})"
 if [[ $tiny == "yes" ]]; then
     if [[ ! $setting ]] || [[ $setting == "no" ]]; then
-        synosetkeyvalue "$synoinfo" "$sbtd" yes
-        synosetkeyvalue "$synoinfo2" "$sbtd" yes
-        enabled="yes"
+        if [[ -n $stbd ]]; then
+            synosetkeyvalue "$synoinfo" "$stbd" yes
+            synosetkeyvalue "$synoinfo2" "$stbd" yes
+            enabled="yes"
+        fi
     elif [[ $setting == "yes" ]]; then
         echo -e "\nTiny Btrfs Data Deduplication already enabled."
     fi
@@ -904,7 +908,7 @@ fi
 
 # Check if we enabled deduplication
 setting="$(get_key_value "$synoinfo" ${sbd})"
-setting2="$(get_key_value "$synoinfo" ${sbtd})"
+setting2="$(get_key_value "$synoinfo" ${stbd})"
 if [[ $enabled == "yes" ]]; then
     if [[ $tiny != "yes" ]]; then
         if [[ $setting == "yes" ]]; then
