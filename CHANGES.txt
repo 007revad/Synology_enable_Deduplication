@@ -1,3 +1,6 @@
+v1.2.15
+- Bug fix for Issue #38
+
 v1.2.14
 - Changed to support DSM 7.2.1 differently than 7.01 to 7.2.
 - Added model or DSM version not supported message if required files are missing.
