@@ -113,6 +113,8 @@ Please [leave a comment in this discussion](https://github.com/007revad/Synology
 | DS918+     | Apollolake    | DSM 7.2-64570 Update 1, 2 and 3   | yes    | |
 | DS918+     | Apollolake    | DSM 7.2-64570                     | yes    | |
 | DS3617xs   | Broadwell     |                                   | **No** | Update to DSM 7.2.1 |
+| | | | | |
+| RS1219+    | Avoton        |                                   | **No** | Avoton not supported |
 
 <br>
 
