@@ -10,7 +10,8 @@ vg=$(lvdisplay | grep /volume_"${scriptvol#volume}" | cut -d"/" -f3)
 
 echo "vg: $vg"  # debug
 
-md=$(pvdisplay | grep -B 1 "$vg" | grep /dev/ | cut -d"/" -f3)
+#md=$(pvdisplay | grep -B 1 "$vg" | grep /dev/ | cut -d"/" -f3)
+md=$(pvdisplay | grep -B 1 -E '[ ]'"$vg" | grep /dev/ | cut -d"/" -f3)
 
 echo "md: $md"  # debug
 
