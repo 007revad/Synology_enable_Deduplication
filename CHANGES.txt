@@ -2,8 +2,9 @@ v1.2.17
 - Changed model not supported message to include CPU arch.
 - Now saves changes.txt as <script-filename>_changes.txt when updating the script.
     - To not overwrite changes.txt if my other scripts are in the same folder.
-- Bug fix for detecting if script is located on M.2 drive.
-- Bug fix for wrong filename when updating itself.
+- Bug fix for wrong filename when updating itself. Issue #44
+- Bug fix for detecting if script is located on M.2 drive. Issue #45
+- Bug fix for showing escape code instead of yellow color. Issue #46
 
 v1.2.15
 - Bug fix for Issue #38
