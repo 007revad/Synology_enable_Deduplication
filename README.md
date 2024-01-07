@@ -107,14 +107,11 @@ Please [leave a comment in this discussion](https://github.com/007revad/Synology
 | DS920+     | Geminilake    | DSM 7.2-64570                     | yes    | |
 | DS720+     | Geminilake    | DSM 7.2-64570 Update 1, 2 and 3   | yes    | |
 | DS720+     | Geminilake    | DSM 7.2-64570                     | yes    | |
-| DS1019+    | Apollolake    | DSM 7.2-64570 Update 1, 2 and 3   | yes    | |
-| DS1019+    | Apollolake    | DSM 7.2-64570                     | yes    | |
-| DS1618+    | Denverton     |                                   | **No** | Denverton not supported |
-| DS918+     | Apollolake    | DSM 7.2-64570 Update 1, 2 and 3   | yes    | |
-| DS918+     | Apollolake    | DSM 7.2-64570                     | yes    | |
 | DS3617xs   | Broadwell     |                                   | **No** | Update to DSM 7.2.1 |
 | | | | | |
-| RS1219+    | Avoton        |                                   | **No** | Avoton not supported |
+|            | Apollolake    |                                   | **No** | Apollolake not supported |
+|            | Avoton        |                                   | **No** | Avoton not supported |
+|            | Denverton     |                                   | **No** | Denverton not supported |
 
 <br>
 
