@@ -9,9 +9,10 @@
 # sudo /volume1/scripts/syno_enable_dedupe.sh
 #-------------------------------------------------------------------------------
 
-scriptver="v1.2.15"
+scriptver="v1.2.17"
 script=Synology_enable_Deduplication
 repo="007revad/Synology_enable_Deduplication"
+scriptname=syno_enable_dedupe
 
 # Check BASH variable is bash
 if [ ! "$(basename "$BASH")" = bash ]; then
@@ -19,8 +20,6 @@ if [ ! "$(basename "$BASH")" = bash ]; then
     printf \\a
     exit 1
 fi
-
-#echo -e "bash version: $(bash --version | head -1 | cut -d' ' -f4)\n"  # debug
 
 ding(){ 
     printf \\a
@@ -180,7 +179,7 @@ smallfixnumber=$(get_key_value /etc.defaults/VERSION smallfixnumber)
 # Show DSM full version and model
 if [[ $buildphase == GM ]]; then buildphase=""; fi
 if [[ $smallfixnumber -gt "0" ]]; then smallfix="-$smallfixnumber"; fi
-echo -e "$model DSM $productversion-$buildnumber$smallfix $buildphase"
+echo -e "$model DSM $productversion-$buildnumber$smallfix $buildphase\n"
 
 
 # Get StorageManager version
@@ -204,7 +203,9 @@ fi
 
 # Check model (and DSM version for that model) supports dedupe
  if [[ ! -f /usr/lib/libsynobtrfsdedupe.so.7 ]]; then
-    echo "You model or DSM version does not support Btrfs Data Deduplication."
+    arch=$(synogetkeyvalue /etc.defaults/synoinfo.conf platform_name)
+    #echo "Your model or DSM version does not support Btrfs Data Deduplication."
+    echo "Models with $arch CPUs do not support Btrfs Data Deduplication."
     exit
 fi
 
@@ -258,20 +259,13 @@ scriptpath=$( cd -P "$( dirname "$source" )" >/dev/null 2>&1 && pwd )
 scriptfile=$( basename -- "$source" )
 echo "Running from: ${scriptpath}/$scriptfile"
 
-#echo "Script location: $scriptpath"  # debug
-#echo "Source: $source"               # debug
-#echo "Script filename: $scriptfile"  # debug
-
-#echo "tag: $tag"              # debug
-#echo "scriptver: $scriptver"  # debug
-
 
 # Warn if script located on M.2 drive
 scriptvol=$(echo "$scriptpath" | cut -d"/" -f2)
 vg=$(lvdisplay | grep /volume_"${scriptvol#volume}" | cut -d"/" -f3)
-md=$(pvdisplay | grep -B 1 "$vg" | grep /dev/ | cut -d"/" -f3)
+md=$(pvdisplay | grep -B 1 -E '[ ]'"$vg" | grep /dev/ | cut -d"/" -f3)
 if cat /proc/mdstat | grep "$md" | grep nvme >/dev/null; then
-    echo "${Yellow}WARNING${Off} Don't store this script on an NVMe volume!"
+    echo -e "${Yellow}WARNING${Off} Don't store this script on an NVMe volume!"
 fi
 
 
@@ -353,8 +347,8 @@ if ! printf "%s\n%s\n" "$tag" "$scriptver" |
                                 syslog_set warn "$script failed to set permissions on $tag"
                             fi
 
-                            # Copy new script sh files to script location
-                            if ! cp -p "/tmp/$script-$shorttag/syno_hdd_db.sh" "${scriptpath}/${scriptfile}";
+                            # Copy new script sh file to script location
+                            if ! cp -p "/tmp/$script-$shorttag/${scriptname}.sh" "${scriptpath}/${scriptfile}";
                             then
                                 copyerr=1
                                 echo -e "${Error}ERROR${Off} Failed to copy"\
@@ -364,7 +358,10 @@ if ! printf "%s\n%s\n" "$tag" "$scriptver" |
 
                             # Copy new CHANGES.txt file to script location (if script on a volume)
                             if [[ $scriptpath =~ /volume* ]]; then
-                                if ! cp -p "/tmp/$script-$shorttag/CHANGES.txt" "$scriptpath"; then
+                                # Copy new CHANGES.txt file to script location
+                                if ! cp -p "/tmp/$script-$shorttag/CHANGES.txt"\
+                                    "${scriptpath}/${scriptname}_CHANGES.txt";
+                                then
                                     if [[ $autoupdate != "yes" ]]; then copyerr=1; fi
                                     echo -e "${Error}ERROR${Off} Failed to copy"\
                                         "$script-$shorttag/CHANGES.txt to:\n $scriptpath"
@@ -384,7 +381,7 @@ if ! printf "%s\n%s\n" "$tag" "$scriptver" |
 
                             # Notify of success (if there were no errors)
                             if [[ $copyerr != 1 ]] && [[ $permerr != 1 ]]; then
-                                echo -e "\n$tag$changestxt downloaded to: ${scriptpath}\n"
+                                echo -e "\n$tag ${scriptfile}$changestxt downloaded to: ${scriptpath}\n"
                                 syslog_set info "$script successfully updated to $tag"
 
                                 # Reload script
@@ -397,7 +394,6 @@ if ! printf "%s\n%s\n" "$tag" "$scriptver" |
                     else
                         echo -e "${Error}ERROR${Off}"\
                             "/tmp/$script-$shorttag.tar.gz not found!"
-                        #ls /tmp | grep "$script"  # debug
                         syslog_set warn "/tmp/$script-$shorttag.tar.gz not found"
                     fi
                 fi
@@ -410,6 +406,7 @@ if ! printf "%s\n%s\n" "$tag" "$scriptver" |
     fi
 fi
 
+
 #------------------------------------------------------------------------------
 # Set file variables
 
@@ -418,12 +415,12 @@ synoinfo2="/etc/synoinfo.conf"
 strgmgr="/var/packages/StorageManager/target/ui/storage_panel.js"
 libhw="/usr/lib/libhwcontrol.so.1"
 
+
 if [[ ! -f ${libhw} ]]; then
     ding
     echo -e "${Error}ERROR${Off} $(basename -- $libhw) not found!"
     exit 1
 fi
-
 
 rebootmsg(){ 
     # Reboot prompt
