@@ -9,7 +9,7 @@
 # sudo /volume1/scripts/syno_enable_dedupe.sh
 #-------------------------------------------------------------------------------
 
-scriptver="v1.2.17"
+scriptver="v1.2.18"
 script=Synology_enable_Deduplication
 repo="007revad/Synology_enable_Deduplication"
 scriptname=syno_enable_dedupe
@@ -206,6 +206,8 @@ fi
     arch=$(synogetkeyvalue /etc.defaults/synoinfo.conf platform_name)
     #echo "Your model or DSM version does not support Btrfs Data Deduplication."
     echo "Models with $arch CPUs do not support Btrfs Data Deduplication."
+    echo "Only models with V1000, R1000, Geminilake, Broadwellnkv2, "
+    echo "Broadwellnk, Broadwell, Purley and Epyc7002 CPUs are supported."
     exit
 fi
 
