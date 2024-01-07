@@ -1,3 +1,6 @@
+v1.2.18
+- Updated unsupported CPU arch message.
+
 v1.2.17
 - Changed model not supported message to include CPU arch.
 - Now saves changes.txt as <script-filename>_changes.txt when updating the script.
