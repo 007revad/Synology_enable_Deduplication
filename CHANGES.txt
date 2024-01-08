@@ -1,3 +1,9 @@
+v1.3.19
+- Added check that script is running on a Synology NAS
+- Added --hdd option to enable data deduplication for HDDs (dangerous)
+  - Changed to not enable data deduplication for HDDs without --hdd option
+- Bug fix for issue #43
+
 v1.2.18
 - Updated unsupported CPU arch message.
 
