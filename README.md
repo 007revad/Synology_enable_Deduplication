@@ -125,6 +125,8 @@ Do ***NOT*** save the script to a M.2 volume. After a DSM or Storage Manager upd
 
 ### Running the script via SSH
 
+[How to enable SSH and login to DSM via SSH](https://kb.synology.com/en-global/DSM/tutorial/How_to_login_to_DSM_with_root_permission_via_SSH_Telnet)
+
 **Note:** Replace /volume1/scripts/ with the path to where the script is located.
 Run the script then reboot the Synology:
 ```YAML
