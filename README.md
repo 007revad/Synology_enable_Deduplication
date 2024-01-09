@@ -125,6 +125,8 @@ Do ***NOT*** save the script to a M.2 volume. After a DSM or Storage Manager upd
 
 ### Running the script via SSH
 
+[How to enable SSH and login to DSM via SSH](https://kb.synology.com/en-global/DSM/tutorial/How_to_login_to_DSM_with_root_permission_via_SSH_Telnet)
+
 **Note:** Replace /volume1/scripts/ with the path to where the script is located.
 Run the script then reboot the Synology:
 ```YAML
@@ -135,7 +137,10 @@ sudo -i /volume1/scripts/syno_enable_dedupe.sh
 ```YAML
   -c, --check           Check value in file and backup file
   -r, --restore         Undo all changes made by the script
-  -e, --email           Disable colored text in output for scheduler emails.
+  -t, --tiny            Enable tiny data deduplication (only needs 4GB RAM)
+                          DSM 7.2.1 and later only
+      --hdd             Enable data deduplication for HDDs (dangerous)
+  -e, --email           Disable colored text in output for scheduler emails
       --autoupdate=AGE  Auto update script (useful when script is scheduled)
                           AGE is how many days old a release must be before
                           auto-updating. AGE must be a number: 0 or greater
