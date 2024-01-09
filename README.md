@@ -137,6 +137,8 @@ sudo -i /volume1/scripts/syno_enable_dedupe.sh
 ```YAML
   -c, --check           Check value in file and backup file
   -r, --restore         Undo all changes made by the script
+  -t, --tiny            Enable tiny data deduplication (only needs 4GB RAM)
+                          DSM 7.2.1 and later only
       --hdd             Enable data deduplication for HDDs (dangerous)
   -e, --email           Disable colored text in output for scheduler emails
       --autoupdate=AGE  Auto update script (useful when script is scheduled)
