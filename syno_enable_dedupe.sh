@@ -9,7 +9,7 @@
 # sudo /volume1/scripts/syno_enable_dedupe.sh
 #-------------------------------------------------------------------------------
 
-scriptver="v1.2.18"
+scriptver="v1.3.19"
 script=Synology_enable_Deduplication
 repo="007revad/Synology_enable_Deduplication"
 scriptname=syno_enable_dedupe
@@ -18,6 +18,14 @@ scriptname=syno_enable_dedupe
 if [ ! "$(basename "$BASH")" = bash ]; then
     echo "This is a bash script. Do not run it with $(basename "$BASH")"
     printf \\a
+    exit 1
+fi
+
+# Check script is running on a Synology NAS
+if ! uname -a | grep -i synology >/dev/null; then
+    echo "This script is NOT running on a Synology NAS!"
+    echo "Copy the script to a folder on the Synology"
+    echo "and run it from there."
     exit 1
 fi
 
@@ -36,7 +44,8 @@ Options:
   -r, --restore         Undo all changes made by the script
   -t, --tiny            Enable tiny data deduplication (only needs 4GB RAM)
                           DSM 7.2.1 and later only
-  -e, --email           Disable colored text in output for scheduler emails.
+      --hdd             Enable data deduplication for HDDs (dangerous)
+  -e, --email           Disable colored text in output for scheduler emails
       --autoupdate=AGE  Auto update script (useful when script is scheduled)
                           AGE is how many days old a release must be before
                           auto-updating. AGE must be a number: 0 or greater
@@ -67,7 +76,7 @@ autoupdate=""
 
 # Check for flags with getopt
 if options="$(getopt -o abcdefghijklmnopqrstuvwxyz0123456789 -l \
-    skip,check,restore,help,version,tiny,email,autoupdate:,log,debug -- "$@")"; then
+    skip,check,restore,help,version,tiny,hdd,email,autoupdate:,log,debug -- "$@")"; then
     eval set -- "$options"
     while true; do
         case "${1,,}" in
@@ -79,6 +88,9 @@ if options="$(getopt -o abcdefghijklmnopqrstuvwxyz0123456789 -l \
                 ;;
             -t|--tiny)          # Enable tiny deduplication
                 tiny=yes
+                ;;
+            --hdd)              # Enable deduplication for HDDs (dangerous)
+                hdd=yes
                 ;;
             -s|--skip)          # Skip memory amount check (for testing)
                 skip=yes
@@ -261,7 +273,6 @@ scriptpath=$( cd -P "$( dirname "$source" )" >/dev/null 2>&1 && pwd )
 scriptfile=$( basename -- "$source" )
 echo "Running from: ${scriptpath}/$scriptfile"
 
-
 # Warn if script located on M.2 drive
 scriptvol=$(echo "$scriptpath" | cut -d"/" -f2)
 vg=$(lvdisplay | grep /volume_"${scriptvol#volume}" | cut -d"/" -f3)
@@ -417,12 +428,12 @@ synoinfo2="/etc/synoinfo.conf"
 strgmgr="/var/packages/StorageManager/target/ui/storage_panel.js"
 libhw="/usr/lib/libhwcontrol.so.1"
 
-
 if [[ ! -f ${libhw} ]]; then
     ding
     echo -e "${Error}ERROR${Off} $(basename -- $libhw) not found!"
     exit 1
 fi
+
 
 rebootmsg(){ 
     # Reboot prompt
@@ -514,7 +525,7 @@ if [[ $restore == "yes" ]]; then
             echo "No backup of $(basename -- "$strgmgr") found."
         fi
 
-        if [[ -z "$storagemgrver" ]]; then  # Is not DSM 7.2.1 or later
+#        if [[ -z "$storagemgrver" ]]; then  # Is not DSM 7.2.1 or later
             if [[ -f "${libhw}.bak" ]]; then
                 # Check if backup libhwcontrol size matches
                 # in case backup is from previous DSM version
@@ -542,7 +553,7 @@ if [[ $restore == "yes" ]]; then
             else
                 echo "No backup of $(basename -- "$libhw") found."
             fi
-        fi
+#        fi
 
         if [[ -z $restoreerr ]]; then
             if [[ $restored == "yes" ]]; then
@@ -703,10 +714,10 @@ if [[ $check == "yes" ]]; then
     fi
 
 
-    # DSM 7.2.1 only
+    # DSM 7.2.1 only and only if --hdd option used
     # Dedupe config button for HDDs and 2.5 inch SSDs in DSM 7.2.1
-    if [[ -f "$strgmgr" ]]; then  # Is DSM 7.2.1 or later
-        # StorageManager package is installed
+    if [[ -f "$strgmgr" ]] && [[ $hdd == "yes" ]]; then
+        # StorageManager package is installed and --hdd option used
         if ! grep '&&e.dedup_info.show_config_btn' "$strgmgr" >/dev/null; then
             echo -e "\nDedupe config menu for HDDs and 2.5\" SSDs already enabled."
         else
@@ -714,8 +725,7 @@ if [[ $check == "yes" ]]; then
         fi
     fi
 
-    # DSM 7.0.1 to 7.2 only
-    if [[ -z "$storagemgrver" ]]; then  # Is not DSM 7.2.1 or later
+#    if [[ -z "$storagemgrver" ]]; then  # Is not DSM 7.2.1 or later
         # Check value in file
         echo -e "\nChecking non-Synology drive supported."
         hexstring="80 3E 00 B8 01 00 00 00 90 90 48 8B"
@@ -753,16 +763,16 @@ if [[ $check == "yes" ]]; then
         else
             echo "No backup file found."
         fi
-    fi
+#    fi
 
     exit "$err"
 fi
 
 
 #----------------------------------------------------------
-# Backup libhwcontrol - DSM 7.0.1 to 7.2 only
+# Backup libhwcontrol
 
-if [[ -z "$storagemgrver" ]]; then  # Is not DSM 7.2.1 or later
+#if [[ -z "$storagemgrver" ]]; then  # Is not DSM 7.2.1 or later
     if [[ ! -f ${libhw}.bak ]]; then
         if cp -p "$libhw" "$libhw".bak ; then
             echo "Backup successful."
@@ -791,13 +801,13 @@ if [[ -z "$storagemgrver" ]]; then  # Is not DSM 7.2.1 or later
         #    echo "$(basename -- "$libhw") already backed up."
         fi
     fi
-fi
+#fi
 
 
 #----------------------------------------------------------
-# Edit libhwcontrol - DSM 7.0.1 to 7.2 only
+# Edit libhwcontrol
 
-if [[ -z "$storagemgrver" ]]; then  # Is not DSM 7.2.1 or later
+#if [[ -z "$storagemgrver" ]]; then  # Is not DSM 7.2.1 or later
     #echo -e "\nChecking $(basename -- "$libhw")."
 
     # Check if the file is already edited
@@ -836,7 +846,8 @@ if [[ -z "$storagemgrver" ]]; then  # Is not DSM 7.2.1 or later
             fi
         fi
     fi
-fi
+#fi
+
 
 #------------------------------------------------------------------------------
 # Edit /etc.defaults/synoinfo.conf
@@ -932,8 +943,8 @@ fi
 #------------------------------------------------------------------------------
 # Edit /var/packages/StorageManager/target/ui/storage_panel.js
 
-# Enable dedupe config button for HDDs and 2.5" SSDs in DSM 7.2.1
-if [[ -f "$strgmgr" ]]; then
+# Enable dedupe config button for HDDs in DSM 7.2.1
+if [[ -f "$strgmgr" ]] && [[ $hdd == "yes" ]]; then
     # StorageManager package is installed
     if grep '&&e.dedup_info.show_config_btn' "$strgmgr" >/dev/null; then
         # Backup storage_panel.js"
