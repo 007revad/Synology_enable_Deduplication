@@ -27,9 +27,11 @@ Please [leave a comment in this discussion](https://github.com/007revad/Synology
 - Btrfs Data Deduplication requires 16GB of memory or more.
 - The volume needs **Usage detail analysis** enabled. See [Enable and View Usage Details](https://kb.synology.com/en-global/DSM/help/DSM/StorageManager/volume_view_usage?version=7).
 
-<br>
 
 ### Works in DSM 7.2.1 for the following models
+
+<details>
+  <summary>Click here to see list</summary>
 
 | Model      | CPU Arch      | DSM version                       | Works  | Notes |
 |------------|---------------|-----------------------------------|--------|-------|
@@ -85,8 +87,13 @@ Please [leave a comment in this discussion](https://github.com/007revad/Synology
 | SA3410     | Broadwellnkv2 | DSM 7.2.1-69057 Update 1, 2 and 3 | yes    | Use v1.2.14 or later |
 | SA3400     | Broadwellnk   | DSM 7.2.1-69057 Update 1, 2 and 3 | yes    | Use v1.2.14 or later |
 
+</details>
 
-### Confirmed working in older DSM versions
+
+### Models confirmed working with older DSM versions
+
+<details>
+  <summary>Click here to see list</summary>
 
 | Model      | CPU Arch      | DSM version                       | Works  | Notes |
 |------------|---------------|-----------------------------------|--------|-------|
@@ -113,7 +120,8 @@ Please [leave a comment in this discussion](https://github.com/007revad/Synology
 |            | Avoton        |                                   | **No** | Avoton not supported |
 |            | Denverton     |                                   | **No** | Denverton not supported |
 
-<br>
+</details>
+
 
 ## Download the script
 
