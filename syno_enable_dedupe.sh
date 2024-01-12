@@ -9,7 +9,7 @@
 # sudo /volume1/scripts/syno_enable_dedupe.sh
 #-------------------------------------------------------------------------------
 
-scriptver="v1.3.19"
+scriptver="v1.3.21"
 script=Synology_enable_Deduplication
 repo="007revad/Synology_enable_Deduplication"
 scriptname=syno_enable_dedupe
@@ -139,7 +139,7 @@ fi
 
 
 if [[ $debug == "yes" ]]; then
-    # set -x
+    set -x
     export PS4='`[[ $? == 0 ]] || echo "\e[1;31;40m($?)\e[m\n "`:.$LINENO:'
 fi
 
@@ -214,9 +214,8 @@ if [[ $major$minor$micro -lt "701" ]]; then
 fi
 
 # Check model (and DSM version for that model) supports dedupe
- if [[ ! -f /usr/lib/libsynobtrfsdedupe.so.7 ]]; then
+ if [[ ! -f /usr/syno/sbin/synobtrfsdedupe ]]; then
     arch=$(synogetkeyvalue /etc.defaults/synoinfo.conf platform_name)
-    #echo "Your model or DSM version does not support Btrfs Data Deduplication."
     echo "Models with $arch CPUs do not support Btrfs Data Deduplication."
     echo "Only models with V1000, R1000, Geminilake, Broadwellnkv2, "
     echo "Broadwellnk, Broadwell, Purley and Epyc7002 CPUs are supported."
@@ -265,7 +264,7 @@ source=${BASH_SOURCE[0]}
 while [ -L "$source" ]; do # Resolve $source until the file is no longer a symlink
     scriptpath=$( cd -P "$( dirname "$source" )" >/dev/null 2>&1 && pwd )
     source=$(readlink "$source")
-    # If $source was a relative symlink, we need to resolve it 
+    # If $source was a relative symlink, we need to resolve it
     # relative to the path where the symlink file was located
     [[ $source != /* ]] && source=$scriptpath/$source
 done
@@ -314,13 +313,14 @@ if ! printf "%s\n%s\n" "$tag" "$scriptver" |
         sort --check=quiet --version-sort >/dev/null ; then
     echo -e "\n${Cyan}There is a newer version of this script available.${Off}"
     echo -e "Current version: ${scriptver}\nLatest version:  $tag"
-    if [[ -f $scriptpath/$script-$shorttag.tar.gz ]]; then
+    scriptdl="$scriptpath/$script-$shorttag"
+    if [[ -f ${scriptdl}.tar.gz ]] || [[ -f ${scriptdl}.zip ]]; then
         # They have the latest version tar.gz downloaded but are using older version
-        echo "https://github.com/$repo/releases/latest"
+        echo "You have the latest version downloaded but are using an older version"
         sleep 10
-    elif [[ -d $scriptpath/$script-$shorttag ]]; then
+    elif [[ -d $scriptdl ]]; then
         # They have the latest version extracted but are using older version
-        echo "https://github.com/$repo/releases/latest"
+        echo "You have the latest version extracted but are using an older version"
         sleep 10
     else
         if [[ $autoupdate == "yes" ]]; then
@@ -365,12 +365,19 @@ if ! printf "%s\n%s\n" "$tag" "$scriptver" |
                             then
                                 copyerr=1
                                 echo -e "${Error}ERROR${Off} Failed to copy"\
-                                    "$script-$shorttag .sh file(s) to:\n $scriptpath"
+                                    "$script-$shorttag sh file(s) to:\n $scriptpath/${scriptfile}"
                                 syslog_set warn "$script failed to copy $tag to script location"
                             fi
 
                             # Copy new CHANGES.txt file to script location (if script on a volume)
                             if [[ $scriptpath =~ /volume* ]]; then
+                                # Set permissions on CHANGES.txt
+                                if ! chmod 664 "/tmp/$script-$shorttag/CHANGES.txt"; then
+                                    permerr=1
+                                    echo -e "${Error}ERROR${Off} Failed to set permissions on:"
+                                    echo "$scriptpath/CHANGES.txt"
+                                fi
+
                                 # Copy new CHANGES.txt file to script location
                                 if ! cp -p "/tmp/$script-$shorttag/CHANGES.txt"\
                                     "${scriptpath}/${scriptname}_CHANGES.txt";
@@ -379,17 +386,11 @@ if ! printf "%s\n%s\n" "$tag" "$scriptver" |
                                     echo -e "${Error}ERROR${Off} Failed to copy"\
                                         "$script-$shorttag/CHANGES.txt to:\n $scriptpath"
                                 else
-                                    # Set permissions on CHANGES.txt
-                                    if ! chmod 664 "$scriptpath/CHANGES.txt"; then
-                                        if [[ $autoupdate != "yes" ]]; then permerr=1; fi
-                                        echo -e "${Error}ERROR${Off} Failed to set permissions on:"
-                                        echo "$scriptpath/CHANGES.txt"
-                                    fi
                                     changestxt=" and changes.txt"
                                 fi
                             fi
 
-                            # Delete extracted tmp files
+                            # Delete downloaded tmp files
                             cleanup_tmp
 
                             # Notify of success (if there were no errors)
@@ -407,6 +408,7 @@ if ! printf "%s\n%s\n" "$tag" "$scriptver" |
                     else
                         echo -e "${Error}ERROR${Off}"\
                             "/tmp/$script-$shorttag.tar.gz not found!"
+                        #ls /tmp | grep "$script"  # debug
                         syslog_set warn "/tmp/$script-$shorttag.tar.gz not found"
                     fi
                 fi
@@ -525,35 +527,33 @@ if [[ $restore == "yes" ]]; then
             echo "No backup of $(basename -- "$strgmgr") found."
         fi
 
-#        if [[ -z "$storagemgrver" ]]; then  # Is not DSM 7.2.1 or later
-            if [[ -f "${libhw}.bak" ]]; then
-                # Check if backup libhwcontrol size matches
-                # in case backup is from previous DSM version
-                filesize=$(wc -c "${libhw}" | awk '{print $1}')
-                filebaksize=$(wc -c "${libhw}.bak" | awk '{print $1}')
-                if [[ ! $filesize -eq "$filebaksize" ]]; then
-                    echo -e "${Yellow}WARNING Backup file size is different to file!${Off}"
-                    echo "Do you want to restore this backup? [yes/no]:"
-                    read -r -t 20 answer
-                    if [[ $answer != "yes" ]]; then
-                        exit
-                    fi
+        if [[ -f "${libhw}.bak" ]]; then
+            # Check if backup libhwcontrol size matches
+            # in case backup is from previous DSM version
+            filesize=$(wc -c "${libhw}" | awk '{print $1}')
+            filebaksize=$(wc -c "${libhw}.bak" | awk '{print $1}')
+            if [[ ! $filesize -eq "$filebaksize" ]]; then
+                echo -e "${Yellow}WARNING Backup file size is different to file!${Off}"
+                echo "Do you want to restore this backup? [yes/no]:"
+                read -r -t 20 answer
+                if [[ $answer != "yes" ]]; then
+                    exit
                 fi
-                # Restore from backup
-                if ! compare_md5 "$libhw".bak "$libhw"; then
-                    if cp -p "$libhw".bak "$libhw" ; then
-                        restored="yes"
-                        reboot="yes"
-                        echo "Restored $(basename -- "$libhw")"
-                    else
-                        restoreerr=1
-                        echo -e "${Error}ERROR${Off} Failed to restore $(basename -- "$libhw")!"
-                    fi
-                fi
-            else
-                echo "No backup of $(basename -- "$libhw") found."
             fi
-#        fi
+            # Restore from backup
+            if ! compare_md5 "$libhw".bak "$libhw"; then
+                if cp -p "$libhw".bak "$libhw" ; then
+                    restored="yes"
+                    reboot="yes"
+                    echo "Restored $(basename -- "$libhw")"
+                else
+                    restoreerr=1
+                    echo -e "${Error}ERROR${Off} Failed to restore $(basename -- "$libhw")!"
+                fi
+            fi
+        else
+            echo "No backup of $(basename -- "$libhw") found."
+        fi
 
         if [[ -z $restoreerr ]]; then
             if [[ $restored == "yes" ]]; then
@@ -699,20 +699,19 @@ if [[ $check == "yes" ]]; then
     stbd=support_tiny_btrfs_dedupe
     setting="$(get_key_value "$synoinfo" ${sbd})"
     setting2="$(get_key_value "$synoinfo" ${stbd})"
-    if [[ $tiny != "yes" ]] || [[ $ramtotal -lt 16384 ]]; then
+#    if [[ $tiny != "yes" ]] || [[ $ramtotal -lt 16384 ]]; then
         if [[ $setting == "yes" ]]; then
-            echo -e "\nBtrfs Data Deduplication is enabled."
+            echo -e "\nBtrfs Data Deduplication is ${Cyan}enabled${Off}."
         else
             echo -e "\nBtrfs Data Deduplication is ${Cyan}not${Off} enabled."
         fi
-    else
+#    else
         if [[ $setting2 == "yes" ]]; then
-            echo -e "\nTiny Btrfs Data Deduplication is enabled."
+            echo -e "\nTiny Btrfs Data Deduplication is ${Cyan}enabled${Off}."
         else
             echo -e "\nTiny Btrfs Data Deduplication is ${Cyan}not${Off} enabled."
         fi
-    fi
-
+#    fi
 
     # DSM 7.2.1 only and only if --hdd option used
     # Dedupe config button for HDDs and 2.5 inch SSDs in DSM 7.2.1
@@ -725,45 +724,43 @@ if [[ $check == "yes" ]]; then
         fi
     fi
 
-#    if [[ -z "$storagemgrver" ]]; then  # Is not DSM 7.2.1 or later
-        # Check value in file
-        echo -e "\nChecking non-Synology drive supported."
-        hexstring="80 3E 00 B8 01 00 00 00 90 90 48 8B"
+    # Check value in file
+    echo -e "\nChecking non-Synology drive supported."
+    hexstring="80 3E 00 B8 01 00 00 00 90 90 48 8B"
+    findbytes "$libhw"
+    if [[ $bytes == "9090" ]]; then
+        echo -e "File is already edited."
+    else
+        hexstring="80 3E 00 B8 01 00 00 00 75 2. 48 8B"
         findbytes "$libhw"
-        if [[ $bytes == "9090" ]]; then
-            echo -e "File is already edited."
+        if [[ $bytes =~ "752"[0-9] ]]; then
+            echo -e "File is ${Cyan}not${Off} edited."
         else
-            hexstring="80 3E 00 B8 01 00 00 00 75 2. 48 8B"
-            findbytes "$libhw"
-            if [[ $bytes =~ "752"[0-9] ]]; then
-                echo -e "File is ${Cyan}not${Off} edited."
+            echo -e "${Red}hex string not found!${Off}"
+            err=1
+        fi
+    fi
+
+    # Check value in backup file
+    if [[ -f ${libhw}.bak ]]; then
+        echo -e "\nChecking value in backup file."
+        hexstring="80 3E 00 B8 01 00 00 00 75 2. 48 8B"
+        findbytes "${libhw}.bak"
+        if [[ $bytes =~ "752"[0-9] ]]; then
+            echo -e "Backup file is okay."
+        else
+            hexstring="80 3E 00 B8 01 00 00 00 90 90 48 8B"
+            findbytes "${libhw}.bak"
+            if [[ $bytes == "9090" ]]; then
+                echo -e "${Red}Backup file has been edited!${Off}"
             else
                 echo -e "${Red}hex string not found!${Off}"
                 err=1
             fi
         fi
-
-        # Check value in backup file
-        if [[ -f ${libhw}.bak ]]; then
-            echo -e "\nChecking value in backup file."
-            hexstring="80 3E 00 B8 01 00 00 00 75 2. 48 8B"
-            findbytes "${libhw}.bak"
-            if [[ $bytes =~ "752"[0-9] ]]; then
-                echo -e "Backup file is okay."
-            else
-                hexstring="80 3E 00 B8 01 00 00 00 90 90 48 8B"
-                findbytes "${libhw}.bak"
-                if [[ $bytes == "9090" ]]; then
-                    echo -e "${Red}Backup file has been edited!${Off}"
-                else
-                    echo -e "${Red}hex string not found!${Off}"
-                    err=1
-                fi
-            fi
-        else
-            echo "No backup file found."
-        fi
-#    fi
+    else
+        echo "No backup file found."
+    fi
 
     exit "$err"
 fi
@@ -772,8 +769,23 @@ fi
 #----------------------------------------------------------
 # Backup libhwcontrol
 
-#if [[ -z "$storagemgrver" ]]; then  # Is not DSM 7.2.1 or later
-    if [[ ! -f ${libhw}.bak ]]; then
+if [[ ! -f ${libhw}.bak ]]; then
+    if cp -p "$libhw" "$libhw".bak ; then
+        echo "Backup successful."
+    else
+        ding
+        echo -e "${Error}ERROR${Off} Backup failed!"
+        exit 1
+    fi
+else
+    # Check if backup size matches file size
+    filesize=$(wc -c "$libhw" | awk '{print $1}')
+    filebaksize=$(wc -c "${libhw}.bak" | awk '{print $1}')
+    if [[ ! $filesize -eq "$filebaksize" ]]; then
+        echo -e "${Yellow}WARNING Backup file size is different to file!${Off}"
+        echo "Maybe you've updated DSM since last running this script?"
+        echo "Renaming file.bak to file.bak.old"
+        mv "${libhw}.bak" "$libhw".bak.old
         if cp -p "$libhw" "$libhw".bak ; then
             echo "Backup successful."
         else
@@ -781,72 +793,53 @@ fi
             echo -e "${Error}ERROR${Off} Backup failed!"
             exit 1
         fi
-    else
-        # Check if backup size matches file size
-        filesize=$(wc -c "$libhw" | awk '{print $1}')
-        filebaksize=$(wc -c "${libhw}.bak" | awk '{print $1}')
-        if [[ ! $filesize -eq "$filebaksize" ]]; then
-            echo -e "${Yellow}WARNING Backup file size is different to file!${Off}"
-            echo "Maybe you've updated DSM since last running this script?"
-            echo "Renaming file.bak to file.bak.old"
-            mv "${libhw}.bak" "$libhw".bak.old
-            if cp -p "$libhw" "$libhw".bak ; then
-                echo "Backup successful."
-            else
-                ding
-                echo -e "${Error}ERROR${Off} Backup failed!"
-                exit 1
-            fi
-        #else
-        #    echo "$(basename -- "$libhw") already backed up."
-        fi
+    #else
+    #    echo "$(basename -- "$libhw") already backed up."
     fi
-#fi
+fi
 
 
 #----------------------------------------------------------
 # Edit libhwcontrol
 
-#if [[ -z "$storagemgrver" ]]; then  # Is not DSM 7.2.1 or later
-    #echo -e "\nChecking $(basename -- "$libhw")."
+#echo -e "\nChecking $(basename -- "$libhw")."
 
-    # Check if the file is already edited
-    hexstring="80 3E 00 B8 01 00 00 00 90 90 48 8B"
+# Check if the file is already edited
+hexstring="80 3E 00 B8 01 00 00 00 90 90 48 8B"
+findbytes "$libhw"
+if [[ $bytes == "9090" ]]; then
+    #echo -e "\n$(basename -- "$libhw") already edited."
+    echo -e "\nNon-Synology drive support already enabled."
+else
+    # Check if the file is okay for editing
+    hexstring="80 3E 00 B8 01 00 00 00 75 2. 48 8B"
     findbytes "$libhw"
-    if [[ $bytes == "9090" ]]; then
-        #echo -e "\n$(basename -- "$libhw") already edited."
-        echo -e "\nNon-Synology drive support already enabled."
-    else
-        # Check if the file is okay for editing
-        hexstring="80 3E 00 B8 01 00 00 00 75 2. 48 8B"
-        findbytes "$libhw"
-        if ! [[ $bytes =~ "752"[0-9] ]]; then
-            ding
-            echo -e "\n${Red}hex string not found!${Off}"
-            exit 1
-        fi
+    if ! [[ $bytes =~ "752"[0-9] ]]; then
+        ding
+        echo -e "\n${Red}hex string not found!${Off}"
+        exit 1
+    fi
 
-        # Replace bytes in file
-        posrep=$(printf "%x\n" $((0x${poshex}+8)))
-        if ! printf %s "${posrep}: 9090" | xxd -r - "$libhw"; then
-            ding
-            echo -e "${Error}ERROR${Off} Failed to edit $(basename -- "$libhw")!"
-            exit 1
-        else
-            # Check if libhwcontrol.so.1 was successfully edited
-            #echo -e "\nChecking if file was successfully edited."
-            hexstring="80 3E 00 B8 01 00 00 00 90 90 48 8B"
-            findbytes "$libhw"
-            if [[ $bytes == "9090" ]]; then
-                #echo -e "File successfully edited."
-                echo -e "\nEnabled non-Synology drive support."
-                #echo -e "\n${Cyan}You can now enable data deduplication"\
-                #    "pool in Storage Manager.${Off}"
-                reboot="yes"
-            fi
+    # Replace bytes in file
+    posrep=$(printf "%x\n" $((0x${poshex}+8)))
+    if ! printf %s "${posrep}: 9090" | xxd -r - "$libhw"; then
+        ding
+        echo -e "${Error}ERROR${Off} Failed to edit $(basename -- "$libhw")!"
+        exit 1
+    else
+        # Check if libhwcontrol.so.1 was successfully edited
+        #echo -e "\nChecking if file was successfully edited."
+        hexstring="80 3E 00 B8 01 00 00 00 90 90 48 8B"
+        findbytes "$libhw"
+        if [[ $bytes == "9090" ]]; then
+            #echo -e "File successfully edited."
+            echo -e "\nEnabled non-Synology drive support."
+            #echo -e "\n${Cyan}You can now enable data deduplication"\
+            #    "pool in Storage Manager.${Off}"
+            reboot="yes"
         fi
     fi
-#fi
+fi
 
 
 #------------------------------------------------------------------------------
