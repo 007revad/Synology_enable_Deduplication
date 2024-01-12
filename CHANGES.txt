@@ -1,3 +1,7 @@
+v1.3.21
+- Improved script updating itself.
+- Now checks script is running on a Synology NAS.
+
 v1.3.19
 - Added check that script is running on a Synology NAS
 - Added --hdd option to enable data deduplication for HDDs (dangerous)
