@@ -9,7 +9,7 @@
 # sudo /volume1/scripts/syno_enable_dedupe.sh
 #-------------------------------------------------------------------------------
 
-scriptver="v1.3.21"
+scriptver="v1.3.22"
 script=Synology_enable_Deduplication
 repo="007revad/Synology_enable_Deduplication"
 scriptname=syno_enable_dedupe
