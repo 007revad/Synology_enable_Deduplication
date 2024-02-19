@@ -1,4 +1,4 @@
-v1.3.24
+v1.3.25
 - Hard coded /usr/syno/bin/ for Synology commands (to prevent $PATH issues).
 
 v1.3.23
