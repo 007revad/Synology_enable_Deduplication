@@ -9,7 +9,7 @@
 # sudo /volume1/scripts/syno_enable_dedupe.sh
 #-------------------------------------------------------------------------------
 
-scriptver="v1.3.23"
+scriptver="v1.3.24"
 script=Synology_enable_Deduplication
 repo="007revad/Synology_enable_Deduplication"
 scriptname=syno_enable_dedupe
@@ -169,9 +169,9 @@ if [[ $( whoami ) != "root" ]]; then
 fi
 
 # Get DSM major, minor and micro versions
-major=$(get_key_value /etc.defaults/VERSION majorversion)
-minor=$(get_key_value /etc.defaults/VERSION minorversion)
-micro=$(get_key_value /etc.defaults/VERSION micro)
+major=$/usr/syno/bin/synogetkeyvalue /etc.defaults/VERSION majorversion)
+minor=$/usr/syno/bin/synogetkeyvalue /etc.defaults/VERSION minorversion)
+micro=$/usr/syno/bin/synogetkeyvalue /etc.defaults/VERSION micro)
 
 # Get NAS model
 model=$(cat /proc/sys/kernel/syno_hw_version)
@@ -183,10 +183,10 @@ model=$(cat /proc/sys/kernel/syno_hw_version)
 echo "$script $scriptver"
 
 # Get DSM full version
-productversion=$(get_key_value /etc.defaults/VERSION productversion)
-buildphase=$(get_key_value /etc.defaults/VERSION buildphase)
-buildnumber=$(get_key_value /etc.defaults/VERSION buildnumber)
-smallfixnumber=$(get_key_value /etc.defaults/VERSION smallfixnumber)
+productversion=$/usr/syno/bin/synogetkeyvalue /etc.defaults/VERSION productversion)
+buildphase=$/usr/syno/bin/synogetkeyvalue /etc.defaults/VERSION buildphase)
+buildnumber=$/usr/syno/bin/synogetkeyvalue /etc.defaults/VERSION buildnumber)
+smallfixnumber=$/usr/syno/bin/synogetkeyvalue /etc.defaults/VERSION smallfixnumber)
 
 # Show DSM full version and model
 if [[ $buildphase == GM ]]; then buildphase=""; fi
@@ -195,7 +195,7 @@ echo -e "$model DSM $productversion-$buildnumber$smallfix $buildphase\n"
 
 
 # Get StorageManager version
-storagemgrver=$(synopkg version StorageManager)
+storagemgrver=$(/usr/syno/bin/synopkg version StorageManager)
 # Show StorageManager version
 if [[ $storagemgrver ]]; then echo -e "StorageManager $storagemgrver \n"; fi
 
@@ -215,7 +215,8 @@ fi
 
 # Check model (and DSM version for that model) supports dedupe
  if [[ ! -f /usr/syno/sbin/synobtrfsdedupe ]]; then
-    arch=$(synogetkeyvalue /etc.defaults/synoinfo.conf platform_name)
+    arch=$(/usr/syno/bin/synogetkeyvalue /etc.defaults/synoinfo.conf platform_name)
+    #echo "Your model or DSM version does not support Btrfs Data Deduplication."
     echo "Models with $arch CPUs do not support Btrfs Data Deduplication."
     echo "Only models with V1000, R1000, Geminilake, Broadwellnkv2, "
     echo "Broadwellnk, Broadwell, Purley and Epyc7002 CPUs are supported."
@@ -230,7 +231,7 @@ syslog_set(){
     if [[ ${1,,} == "info" ]] || [[ ${1,,} == "warn" ]] || [[ ${1,,} == "err" ]]; then
         if [[ $autoupdate == "yes" ]]; then
             # Add entry to Synology system log
-            synologset1 sys "$1" 0x11100000 "$2"
+            /usr/syno/bin/synologset1 sys "$1" 0x11100000 "$2"
         fi
     fi
 }
@@ -491,17 +492,17 @@ if [[ $restore == "yes" ]]; then
         if [[ -f ${synoinfo}.bak ]]; then
             keyvalues=("support_btrfs_dedupe" "support_tiny_btrfs_dedupe")
             for v in "${!keyvalues[@]}"; do
-                defaultval="$(get_key_value ${synoinfo}.bak "${keyvalues[v]}")"
+                defaultval="$/usr/syno/bin/synogetkeyvalue ${synoinfo}.bak "${keyvalues[v]}")"
                 if [[ -z $defaultval ]]; then defaultval="no"; fi
-                currentval="$(get_key_value ${synoinfo} "${keyvalues[v]}")"
+                currentval="$/usr/syno/bin/synogetkeyvalue ${synoinfo} "${keyvalues[v]}")"
                 if [[ $currentval != "$defaultval" ]]; then
-                    if synosetkeyvalue "$synoinfo" "${keyvalues[v]}" "$defaultval";
+                    if /usr/syno/bin/synosetkeyvalue "$synoinfo" "${keyvalues[v]}" "$defaultval";
                     then
                         restored="yes"
                         echo "Restored ${keyvalues[v]} = $defaultval"
                     fi
                 fi
-                synosetkeyvalue "$synoinfo2" "${keyvalues[v]}" "$defaultval"
+                /usr/syno/bin/synosetkeyvalue "$synoinfo2" "${keyvalues[v]}" "$defaultval"
             done
         fi
 
@@ -697,8 +698,8 @@ if [[ $check == "yes" ]]; then
     # Check if deduplication enabled in synoinfo.conf
     sbd=support_btrfs_dedupe
     stbd=support_tiny_btrfs_dedupe
-    setting="$(get_key_value "$synoinfo" ${sbd})"
-    setting2="$(get_key_value "$synoinfo" ${stbd})"
+    setting="$/usr/syno/bin/synogetkeyvalue "$synoinfo" ${sbd})"
+    setting2="$/usr/syno/bin/synogetkeyvalue "$synoinfo" ${stbd})"
 #    if [[ $tiny != "yes" ]] || [[ $ramtotal -lt 16384 ]]; then
         if [[ $setting == "yes" ]]; then
             echo -e "\nBtrfs Data Deduplication is ${Cyan}enabled${Off}."
@@ -861,12 +862,12 @@ sbd=support_btrfs_dedupe
 stbd=support_tiny_btrfs_dedupe
 
 # Enable dedupe support if needed
-setting="$(get_key_value "$synoinfo" ${sbd})"
+setting="$/usr/syno/bin/synogetkeyvalue "$synoinfo" ${sbd})"
 if [[ $tiny != "yes" ]]; then
     if [[ ! $setting ]] || [[ $setting == "no" ]]; then
         if [[ -n $sbd ]]; then
-            synosetkeyvalue "$synoinfo" "$sbd" yes
-            synosetkeyvalue "$synoinfo2" "$sbd" yes
+            /usr/syno/bin/synosetkeyvalue "$synoinfo" "$sbd" yes
+            /usr/syno/bin/synosetkeyvalue "$synoinfo2" "$sbd" yes
             enabled="yes"
         fi
     elif [[ $setting == "yes" ]]; then
@@ -876,21 +877,21 @@ if [[ $tiny != "yes" ]]; then
     # Disable support_tiny_btrfs_dedupe
     if [[ $enabled == "yes" ]]; then
         if grep "$stbd" "$synoinfo" >/dev/null; then
-            synosetkeyvalue "$synoinfo" "$stbd" no
+            /usr/syno/bin/synosetkeyvalue "$synoinfo" "$stbd" no
         fi
         if grep "$stbd" "$synoinfo2" >/dev/null; then
-            synosetkeyvalue "$synoinfo2" "$stbd" no
+            /usr/syno/bin/synosetkeyvalue "$synoinfo2" "$stbd" no
         fi
     fi
 fi
 
 # Enable tiny dedupe support if needed
-setting="$(get_key_value "$synoinfo" ${stbd})"
+setting="$/usr/syno/bin/synogetkeyvalue "$synoinfo" ${stbd})"
 if [[ $tiny == "yes" ]]; then
     if [[ ! $setting ]] || [[ $setting == "no" ]]; then
         if [[ -n $stbd ]]; then
-            synosetkeyvalue "$synoinfo" "$stbd" yes
-            synosetkeyvalue "$synoinfo2" "$stbd" yes
+            /usr/syno/bin/synosetkeyvalue "$synoinfo" "$stbd" yes
+            /usr/syno/bin/synosetkeyvalue "$synoinfo2" "$stbd" yes
             enabled="yes"
         fi
     elif [[ $setting == "yes" ]]; then
@@ -900,18 +901,18 @@ if [[ $tiny == "yes" ]]; then
     # Disable support_btrfs_dedupe
     if [[ $enabled == "yes" ]]; then
         if grep "$sbd" "$synoinfo" >/dev/null; then
-            synosetkeyvalue "$synoinfo" "$sbd" no
+            /usr/syno/bin/synosetkeyvalue "$synoinfo" "$sbd" no
         fi
         if grep "$sbd" "$synoinfo2" >/dev/null; then
-            synosetkeyvalue "$synoinfo2" "$sbd" no
+            /usr/syno/bin/synosetkeyvalue "$synoinfo2" "$sbd" no
         fi
     fi
 fi
 
 
 # Check if we enabled deduplication
-setting="$(get_key_value "$synoinfo" ${sbd})"
-setting2="$(get_key_value "$synoinfo" ${stbd})"
+setting="$/usr/syno/bin/synogetkeyvalue "$synoinfo" ${sbd})"
+setting2="$/usr/syno/bin/synogetkeyvalue "$synoinfo" ${stbd})"
 if [[ $enabled == "yes" ]]; then
     if [[ $tiny != "yes" ]]; then
         if [[ $setting == "yes" ]]; then
