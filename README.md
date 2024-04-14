@@ -36,11 +36,11 @@ Please [leave a comment in this discussion](https://github.com/007revad/Synology
 | Model      | CPU Arch      | DSM version                   | Works  | Notes |
 |------------|---------------|-------------------------------|--------|-------|
 | DS224+     | Geminilake    | DSM 7.2.1-69057 Update 1 to 3 | yes    | Use v1.2.14 or later |
-| DS1823xs+  | V1000         | DSM 7.2.1-69057 Update 1 to 3 | yes    | Use v1.2.14 or later |
+| DS1823xs+  | V1000         | DSM 7.2.1-69057 Update 1 to 4 | yes    | Use v1.2.14 or later |
 | DS923+     | R1000         | DSM 7.2.1-69057 Update 1 to 3 | yes    | Use v1.2.14 or later |
 | DS723+     | R1000         | DSM 7.2.1-69057 Update 1 to 3 | yes    | Use v1.2.14 or later |
 | DS423+     | Geminilake    | DSM 7.2.1-69057 Update 1 to 3 | yes    | Use v1.2.14 or later |
-| DS3622xs+  | Broadwellnk   | DSM 7.2.1-69057 Update 1 to 3 | yes    | Use v1.2.14 or later |
+| DS3622xs+  | Broadwellnk   | DSM 7.2.1-69057 Update 1 to 4 | yes    | Use v1.2.14 or later |
 | DS2422xs+  | V1000         | DSM 7.2.1-69057 Update 1 to 4 | yes    | Use v1.2.14 or later |
 | DS1821+    | V1000         | DSM 7.2.1-69057 Update 1 to 3 | yes    | Use v1.2.14 or later |
 | DS1621+    | V1000         | DSM 7.2.1-69057 Update 1 to 3 | yes    | Use v1.2.14 or later |
