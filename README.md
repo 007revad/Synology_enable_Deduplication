@@ -116,9 +116,9 @@ Please [leave a comment in this discussion](https://github.com/007revad/Synology
 | DS720+     | Geminilake    | DSM 7.2-64570                 | yes    | |
 | DS3617xs   | Broadwell     |                               | **No** | Update to DSM 7.2.1 |
 | | | | | |
-|            | Apollolake    |                               | **No** | Apollolake not supported |
-|            | Avoton        |                               | **No** | Avoton not supported |
-|            | Denverton     |                               | **No** | Denverton not supported |
+|            | Apollolake    |                               | **No** | DSM missing many required files |
+|            | Avoton        |                               | **No** | DSM missing many required files |
+|            | Denverton     |                               | **No** | DSM missing many required files |
 
 </details>
 
