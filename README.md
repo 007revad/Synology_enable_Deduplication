@@ -16,7 +16,7 @@ Enable data deduplication with non-Synology SSDs and unsupported NAS models
 
 It works on [Synology models that do offically support data deduplication](https://kb.synology.com/en-global/DSM/tutorial/Which_models_support_data_deduplication).
 
-It also works in DSM 7.0.1 to 7.2.1 on models with one of following [CPU architectures](https://kb.synology.com/en-global/DSM/tutorial/What_kind_of_CPU_does_my_NAS_have): V1000, R1000, Geminilake and Broadwellnk.
+It also works in DSM 7.0.1 to 7.2.1 on models with one of the following [CPU architectures](https://kb.synology.com/en-global/DSM/tutorial/What_kind_of_CPU_does_my_NAS_have): V1000, R1000, Geminilake and Broadwellnk.
 
 It only works in DSM 7.2.1 on models with a Broadwellnkv2, Broadwell, Purley, Epyc7002 CPU.
 
