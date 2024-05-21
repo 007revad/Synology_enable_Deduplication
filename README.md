@@ -20,6 +20,8 @@ It also works in DSM 7.0.1 to 7.2.1 on models with one of following [CPU archite
 
 It only works in DSM 7.2.1 on models with a Broadwellnkv2, Broadwell, Purley, Epyc7002 CPU.
 
+It does **NOT** work for models with Apollolake, Avoton or Denverton CPUs.
+
 Please [leave a comment in this discussion](https://github.com/007revad/Synology_enable_Deduplication/discussions/31) if it works, or doesn't work, for you.
 
 ### Requirements
