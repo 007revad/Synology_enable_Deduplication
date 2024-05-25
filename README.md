@@ -38,57 +38,58 @@ Please [leave a comment in this discussion](https://github.com/007revad/Synology
 
 | Model      | CPU Arch      | DSM version                   | Works  | Notes |
 |------------|---------------|-------------------------------|--------|-------|
-| DS224+     | Geminilake    | DSM 7.2.1-69057 Update 1 to 3 | yes    | Use v1.2.14 or later |
-| DS1823xs+  | V1000         | DSM 7.2.1-69057 Update 1 to 4 | yes    | Use v1.2.14 or later |
-| DS923+     | R1000         | DSM 7.2.1-69057 Update 1 to 3 | yes    | Use v1.2.14 or later |
-| DS723+     | R1000         | DSM 7.2.1-69057 Update 1 to 3 | yes    | Use v1.2.14 or later |
-| DS423+     | Geminilake    | DSM 7.2.1-69057 Update 1 to 3 | yes    | Use v1.2.14 or later |
-| DS3622xs+  | Broadwellnk   | DSM 7.2.1-69057 Update 1 to 4 | yes    | Use v1.2.14 or later |
-| DS2422xs+  | V1000         | DSM 7.2.1-69057 Update 1 to 4 | yes    | Use v1.2.14 or later |
-| DS1821+    | V1000         | DSM 7.2.1-69057 Update 1 to 3 | yes    | Use v1.2.14 or later |
-| DS1621+    | V1000         | DSM 7.2.1-69057 Update 1 to 3 | yes    | Use v1.2.14 or later |
-| DS1621xs+  | Broadwellnk   | DSM 7.2.1-69057 Update 1 to 3 | yes    | Use v1.2.14 or later |
-| DS1522+    | R1000         | DSM 7.2.1-69057 Update 1 to 3 | yes    | Use v1.2.14 or later |
-| DS1520+    | Geminilake    | DSM 7.2.1-69057 Update 1 to 3 | yes    | Use v1.2.14 or later |
-| DS420+     | Geminilake    | DSM 7.2.1-69057 Update 1 to 3 | yes    | Use v1.2.14 or later |
-| DS220+     | Geminilake    | DSM 7.2.1-69057 Update 1 to 3 | yes    | Use v1.2.14 or later |
-| DS3018xs   | Broadwellnk   | DSM 7.2.1-69057 Update 1 to 3 | yes    | Use v1.2.14 or later |
-| DS3017xsII | Broadwell     | DSM 7.2.1-69057 Update 1 to 3 | yes    | Use v1.2.14 or later |
-| DS3017xs   | Broadwell     | DSM 7.2.1-69057 Update 1 to 3 | yes    | Use v1.2.14 or later |
+| DS224+     | Geminilake    | DSM 7.2.1-69057 Update 1 to 5 | yes    | Use v1.2.14 or later |
+| DS1823xs+  | V1000         | DSM 7.2.1-69057 Update 1 to 5 | yes    | Use v1.2.14 or later |
+| DS923+     | R1000         | DSM 7.2.1-69057 Update 1 to 5 | yes    | Use v1.2.14 or later |
+| DS723+     | R1000         | DSM 7.2.1-69057 Update 1 to 5 | yes    | Use v1.2.14 or later |
+| DS423+     | Geminilake    | DSM 7.2.1-69057 Update 1 to 5 | yes    | Use v1.2.14 or later |
+| DS3622xs+  | Broadwellnk   | DSM 7.2.1-69057 Update 1 to 5 | yes    | Use v1.2.14 or later |
+| DS2422xs+  | V1000         | DSM 7.2.1-69057 Update 1 to 5 | yes    | Use v1.2.14 or later |
+| DS1821+    | V1000         | DSM 7.2.1-69057 Update 1 to 5 | yes    | Use v1.2.14 or later |
+| DS1621+    | V1000         | DSM 7.2.1-69057 Update 1 to 5 | yes    | Use v1.2.14 or later |
+| DS1621xs+  | Broadwellnk   | DSM 7.2.1-69057 Update 1 to 5 | yes    | Use v1.2.14 or later |
+| DS1522+    | R1000         | DSM 7.2.1-69057 Update 1 to 5 | yes    | Use v1.2.14 or later |
+| DS1520+    | Geminilake    | DSM 7.2.1-69057 Update 1 to 5 | yes    | Use v1.2.14 or later |
+| DS720+     | Geminilake    | DSM 7.2.1-69057 Update 1 to 5 | yes    | Use v1.2.14 or later |
+| DS420+     | Geminilake    | DSM 7.2.1-69057 Update 1 to 5 | yes    | Use v1.2.14 or later |
+| DS220+     | Geminilake    | DSM 7.2.1-69057 Update 1 to 5 | yes    | Use v1.2.14 or later |
+| DS3018xs   | Broadwellnk   | DSM 7.2.1-69057 Update 1 to 5 | yes    | Use v1.2.14 or later |
+| DS3017xsII | Broadwell     | DSM 7.2.1-69057 Update 1 to 5 | yes    | Use v1.2.14 or later |
+| DS3017xs   | Broadwell     | DSM 7.2.1-69057 Update 1 to 5 | yes    | Use v1.2.14 or later |
 | | | | | |
-| DVA1622    | Geminilake    | DSM 7.2.1-69057 Update 1 to 3 | yes    | Use v1.2.14 or later |
+| DVA1622    | Geminilake    | DSM 7.2.1-69057 Update 1 to 5 | yes    | Use v1.2.14 or later |
 | | | | | |
-| RS2423xs+  | V1000         | DSM 7.2.1-69057 Update 1 to 3 | yes    | Use v1.2.14 or later |
-| RS822xs+   | V1000         | DSM 7.2.1-69057 Update 1 to 3 | yes    | Use v1.2.14 or later |
-| RS422xs+   | R1000         | DSM 7.2.1-69057 Update 1 to 3 | yes    | Use v1.2.14 or later |
-| RS4021xs+  | Broadwellnk   | DSM 7.2.1-69057 Update 1 to 3 | yes    | Use v1.2.14 or later |
-| RS3621RPxs | Broadwellnk   | DSM 7.2.1-69057 Update 1 to 3 | yes    | Use v1.2.14 or later |
-| RS3621xs+  | Broadwellnk   | DSM 7.2.1-69057 Update 1 to 3 | yes    | Use v1.2.14 or later |
-| RS2821RPxs+ | V1000        | DSM 7.2.1-69057 Update 1 to 3 | yes    | Use v1.2.14 or later |
-| RS2421xs+  | V1000         | DSM 7.2.1-69057 Update 1 to 3 | yes    | Use v1.2.14 or later |
-| RS1221xs+  | V1000         | DSM 7.2.1-69057 Update 1 to 3 | yes    | Use v1.2.14 or later |
-| RS1619xs+  | Broadwellnk   | DSM 7.2.1-69057 Update 1 to 3 | yes    | Use v1.2.14 or later |
-| RS3618xs   | Broadwell     | DSM 7.2.1-69057 Update 1 to 3 | yes    | Use v1.2.14 or later |
-| RS3617xs+  | Broadwell     | DSM 7.2.1-69057 Update 1 to 3 | yes    | Use v1.2.14 or later |
-| RS3617RPxs | Broadwell     | DSM 7.2.1-69057 Update 1 to 3 | yes    | Use v1.2.14 or later |
-| RS18017xs+ | Broadwell     | DSM 7.2.1-69057 Update 1 to 3 | yes    | Use v1.2.14 or later |
-| RS4017xs+  | Broadwell     | DSM 7.2.1-69057 Update 1 to 3 | yes    | Use v1.2.14 or later |
+| RS2423xs+  | V1000         | DSM 7.2.1-69057 Update 1 to 5 | yes    | Use v1.2.14 or later |
+| RS822xs+   | V1000         | DSM 7.2.1-69057 Update 1 to 5 | yes    | Use v1.2.14 or later |
+| RS422xs+   | R1000         | DSM 7.2.1-69057 Update 1 to 5 | yes    | Use v1.2.14 or later |
+| RS4021xs+  | Broadwellnk   | DSM 7.2.1-69057 Update 1 to 5 | yes    | Use v1.2.14 or later |
+| RS3621RPxs | Broadwellnk   | DSM 7.2.1-69057 Update 1 to 5 | yes    | Use v1.2.14 or later |
+| RS3621xs+  | Broadwellnk   | DSM 7.2.1-69057 Update 1 to 5 | yes    | Use v1.2.14 or later |
+| RS2821RPxs+ | V1000        | DSM 7.2.1-69057 Update 1 to 5 | yes    | Use v1.2.14 or later |
+| RS2421xs+  | V1000         | DSM 7.2.1-69057 Update 1 to 5 | yes    | Use v1.2.14 or later |
+| RS1221xs+  | V1000         | DSM 7.2.1-69057 Update 1 to 5 | yes    | Use v1.2.14 or later |
+| RS1619xs+  | Broadwellnk   | DSM 7.2.1-69057 Update 1 to 5 | yes    | Use v1.2.14 or later |
+| RS3618xs   | Broadwell     | DSM 7.2.1-69057 Update 1 to 5 | yes    | Use v1.2.14 or later |
+| RS3617xs+  | Broadwell     | DSM 7.2.1-69057 Update 1 to 5 | yes    | Use v1.2.14 or later |
+| RS3617RPxs | Broadwell     | DSM 7.2.1-69057 Update 1 to 5 | yes    | Use v1.2.14 or later |
+| RS18017xs+ | Broadwell     | DSM 7.2.1-69057 Update 1 to 5 | yes    | Use v1.2.14 or later |
+| RS4017xs+  | Broadwell     | DSM 7.2.1-69057 Update 1 to 5 | yes    | Use v1.2.14 or later |
 | | | | | |
-| FS6400     | Purley        | DSM 7.2.1-69057 Update 1 to 3 | yes    | Use v1.2.14 or later |
-| FS3600     | Broadwellnk   | DSM 7.2.1-69057 Update 1 to 3 | yes    | Use v1.2.14 or later |
-| FS3410     | Broadwellnkv2 | DSM 7.2.1-69057 Update 1 to 3 | yes    | Use v1.2.14 or later |
-| FS3400     | Broadwell     | DSM 7.2.1-69057 Update 1 to 3 | yes    | Use v1.2.14 or later |
-| FS2500     | V1000         | DSM 7.2.1-69057 Update 1 to 3 | yes    | Use v1.2.14 or later |
-| FS2017     | Broadwell     | DSM 7.2.1-69057 Update 1 to 3 | yes    | Use v1.2.14 or later |
-| FS1018     | Broadwellnk   | DSM 7.2.1-69057 Update 1 to 3 | yes    | Use v1.2.14 or later |
+| FS6400     | Purley        | DSM 7.2.1-69057 Update 1 to 5 | yes    | Use v1.2.14 or later |
+| FS3600     | Broadwellnk   | DSM 7.2.1-69057 Update 1 to 5 | yes    | Use v1.2.14 or later |
+| FS3410     | Broadwellnkv2 | DSM 7.2.1-69057 Update 1 to 5 | yes    | Use v1.2.14 or later |
+| FS3400     | Broadwell     | DSM 7.2.1-69057 Update 1 to 5 | yes    | Use v1.2.14 or later |
+| FS2500     | V1000         | DSM 7.2.1-69057 Update 1 to 5 | yes    | Use v1.2.14 or later |
+| FS2017     | Broadwell     | DSM 7.2.1-69057 Update 1 to 5 | yes    | Use v1.2.14 or later |
+| FS1018     | Broadwellnk   | DSM 7.2.1-69057 Update 1 to 5 | yes    | Use v1.2.14 or later |
 | | | | | |
-| HD6500     | Purley        | DSM 7.2.1-69057 Update 1 to 3 | yes    | Use v1.2.14 or later |
+| HD6500     | Purley        | DSM 7.2.1-69057 Update 1 to 5 | yes    | Use v1.2.14 or later |
 | | | | | |
-| SA6400     | Epyc7002      | DSM 7.2.1-69057 Update 1 to 3 | yes    | Use v1.2.14 or later |
-| SA3610     | Broadwellnkv2 | DSM 7.2.1-69057 Update 1 to 3 | yes    | Use v1.2.14 or later |
-| SA3600     | Broadwellnk   | DSM 7.2.1-69057 Update 1 to 3 | yes    | Use v1.2.14 or later |
-| SA3410     | Broadwellnkv2 | DSM 7.2.1-69057 Update 1 to 3 | yes    | Use v1.2.14 or later |
-| SA3400     | Broadwellnk   | DSM 7.2.1-69057 Update 1 to 3 | yes    | Use v1.2.14 or later |
+| SA6400     | Epyc7002      | DSM 7.2.1-69057 Update 1 to 5 | yes    | Use v1.2.14 or later |
+| SA3610     | Broadwellnkv2 | DSM 7.2.1-69057 Update 1 to 5 | yes    | Use v1.2.14 or later |
+| SA3600     | Broadwellnk   | DSM 7.2.1-69057 Update 1 to 5 | yes    | Use v1.2.14 or later |
+| SA3410     | Broadwellnkv2 | DSM 7.2.1-69057 Update 1 to 5 | yes    | Use v1.2.14 or later |
+| SA3400     | Broadwellnk   | DSM 7.2.1-69057 Update 1 to 5 | yes    | Use v1.2.14 or later |
 
 </details>
 
