@@ -50,6 +50,7 @@ Please [leave a comment in this discussion](https://github.com/007revad/Synology
 | DS1621xs+  | Broadwellnk   | DSM 7.2.1-69057 Update 1 to 5 | yes    | Use v1.2.14 or later |
 | DS1522+    | R1000         | DSM 7.2.1-69057 Update 1 to 5 | yes    | Use v1.2.14 or later |
 | DS1520+    | Geminilake    | DSM 7.2.1-69057 Update 1 to 5 | yes    | Use v1.2.14 or later |
+| DS920+     | Geminilake    | DSM 7.2.1-69057 Update 1 to 5 | yes    | Use v1.2.14 or later |
 | DS720+     | Geminilake    | DSM 7.2.1-69057 Update 1 to 5 | yes    | Use v1.2.14 or later |
 | DS420+     | Geminilake    | DSM 7.2.1-69057 Update 1 to 5 | yes    | Use v1.2.14 or later |
 | DS220+     | Geminilake    | DSM 7.2.1-69057 Update 1 to 5 | yes    | Use v1.2.14 or later |
