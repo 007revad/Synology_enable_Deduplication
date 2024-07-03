@@ -1,3 +1,9 @@
+v1.4.28
+- Added support for DSM 7.0.1 to 7.2 (untested).
+- Bug fix for when restoring storage_panel.js from backup.
+- Bug fix for false "Failed to delete tmp files" log entries when script updates itself.
+  - Bug first appeared in v1.1.13
+
 v1.3.25
 - Hard coded /usr/syno/bin/ for Synology commands (to prevent $PATH issues).
 
