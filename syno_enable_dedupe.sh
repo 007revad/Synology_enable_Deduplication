@@ -9,7 +9,9 @@
 # sudo /volume1/scripts/syno_enable_dedupe.sh
 #-------------------------------------------------------------------------------
 
-scriptver="v1.3.25"
+# Added support for DSM 7.0.1 to 7.2 (untested)
+
+scriptver="v1.4.28"
 script=Synology_enable_Deduplication
 repo="007revad/Synology_enable_Deduplication"
 scriptname=syno_enable_dedupe
@@ -304,7 +306,7 @@ cleanup_tmp(){
     fi
 
     # Add warning to DSM log
-    if [[ -z $cleanup_err ]]; then
+    if [[ $cleanup_err ]]; then
         syslog_set warn "$script update failed to delete tmp files"
     fi
 }
@@ -428,8 +430,17 @@ fi
 
 synoinfo="/etc.defaults/synoinfo.conf"
 synoinfo2="/etc/synoinfo.conf"
-strgmgr="/var/packages/StorageManager/target/ui/storage_panel.js"
+#strgmgr="/var/packages/StorageManager/target/ui/storage_panel.js"
 libhw="/usr/lib/libhwcontrol.so.1"
+
+if [[ $buildnumber -gt 64570 ]]; then
+    # DSM 7.2.1 and later
+    #strgmgr="/var/packages/StorageManager/target/ui/storage_panel.js"
+    strgmgr="/usr/local/packages/@appstore/StorageManager/ui/storage_panel.js"
+else
+    # DSM 7.0.1 to 7.2
+    strgmgr="/usr/syno/synoman/webman/modules/StorageManager/storage_panel.js"
+fi
 
 if [[ ! -f ${libhw} ]]; then
     ding
@@ -508,7 +519,7 @@ if [[ $restore == "yes" ]]; then
 
         # Restore storage_panel.js from backup
         if [[ -f "${strgmgr}.$storagemgrver" ]]; then
-            string1="(SYNO.SDS.StorageUtils.supportBtrfsDedupe)"
+            string1="(SYNO.SDS.StorageUtils.supportBtrfsDedupe,)"
             string2="(SYNO.SDS.StorageUtils.supportBtrfsDedupe&&e.dedup_info.show_config_btn)"
 
             if grep -o "$string1" "${strgmgr}" >/dev/null; then
