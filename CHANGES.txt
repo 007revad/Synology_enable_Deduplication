@@ -1,3 +1,7 @@
+v1.4.29
+- Changed to show state of "Dedupe config menu for HDDs and 2.5 inch SSDs" even if --hdd option not used. Issue #79
+  - Now also shows "Run the script with the --hdd option if you want it enabled". Issue #79
+
 v1.4.28
 - Added support for DSM 7.0.1 to 7.2 (untested).
 - Bug fix for when restoring storage_panel.js from backup.

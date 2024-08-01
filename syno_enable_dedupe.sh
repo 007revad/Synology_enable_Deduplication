@@ -11,7 +11,7 @@
 
 # Added support for DSM 7.0.1 to 7.2 (untested)
 
-scriptver="v1.4.28"
+scriptver="v1.4.29"
 script=Synology_enable_Deduplication
 repo="007revad/Synology_enable_Deduplication"
 scriptname=syno_enable_dedupe
@@ -727,12 +727,13 @@ if [[ $check == "yes" ]]; then
 
     # DSM 7.2.1 only and only if --hdd option used
     # Dedupe config button for HDDs and 2.5 inch SSDs in DSM 7.2.1
-    if [[ -f "$strgmgr" ]] && [[ $hdd == "yes" ]]; then
+    if [[ -f "$strgmgr" ]]; then
         # StorageManager package is installed and --hdd option used
         if ! grep '&&e.dedup_info.show_config_btn' "$strgmgr" >/dev/null; then
-            echo -e "\nDedupe config menu for HDDs and 2.5\" SSDs already enabled."
+            echo -e "\nDedupe config menu for HDDs and 2.5\" SSDs is ${Cyan}enabled${Off}."
         else
             echo -e "\nDedupe config menu for HDDs and 2.5\" SSDs is ${Cyan}not${Off} enabled."
+            echo "Run the script with the --hdd option if you want it enabled."
         fi
     fi
 
@@ -975,6 +976,13 @@ if [[ -f "$strgmgr" ]] && [[ $hdd == "yes" ]]; then
         fi
     else
         echo -e "\nDedupe config menu for HDDs and 2.5\" SSDs already enabled."
+    fi
+elif [[ -f "$strgmgr" ]]; then
+    if ! grep '&&e.dedup_info.show_config_btn' "$strgmgr" >/dev/null; then
+        echo -e "\nDedupe config menu for HDDs and 2.5\" SSDs is enabled."
+    else
+        echo -e "\nDedupe config menu for HDDs and 2.5\" SSDs not enabled."
+        echo "Run the script with the --hdd option if you want it enabled."
     fi
 fi
 
