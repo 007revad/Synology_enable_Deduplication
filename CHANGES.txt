@@ -1,3 +1,7 @@
+v1.4.30
+- Updated help to explain why Synology avoids using deduplication on HDDs.
+- Updated Finished message to say you may need to reboot.
+
 v1.4.29
 - Changed to show state of "Dedupe config menu for HDDs and 2.5 inch SSDs" even if --hdd option not used. Issue #79
   - Now also shows "Run the script with the --hdd option if you want it enabled". Issue #79

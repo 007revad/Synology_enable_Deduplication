@@ -11,7 +11,7 @@
 
 # Added support for DSM 7.0.1 to 7.2 (untested)
 
-scriptver="v1.4.29"
+scriptver="v1.4.30"
 script=Synology_enable_Deduplication
 repo="007revad/Synology_enable_Deduplication"
 scriptname=syno_enable_dedupe
@@ -46,7 +46,9 @@ Options:
   -r, --restore         Undo all changes made by the script
   -t, --tiny            Enable tiny data deduplication (only needs 4GB RAM)
                           DSM 7.2.1 and later only
-      --hdd             Enable data deduplication for HDDs (dangerous)
+      --hdd             Enable data deduplication for HDDs.
+                          Can cause files to become more fragmented,
+                          resulting in decreased access performance.
   -e, --email           Disable colored text in output for scheduler emails
       --autoupdate=AGE  Auto update script (useful when script is scheduled)
                           AGE is how many days old a release must be before
@@ -471,6 +473,7 @@ reloadmsg(){
     echo -e "\nFinished"
     echo -e "\nIf you have DSM open in a browser you need to"
     echo "refresh the browser window or tab."
+    echo "You may also need to reboot."
     exit
 }
 
@@ -727,6 +730,7 @@ if [[ $check == "yes" ]]; then
 
     # DSM 7.2.1 only and only if --hdd option used
     # Dedupe config button for HDDs and 2.5 inch SSDs in DSM 7.2.1
+#    if [[ -f "$strgmgr" ]] && [[ $hdd == "yes" ]]; then
     if [[ -f "$strgmgr" ]]; then
         # StorageManager package is installed and --hdd option used
         if ! grep '&&e.dedup_info.show_config_btn' "$strgmgr" >/dev/null; then
