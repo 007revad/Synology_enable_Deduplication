@@ -152,9 +152,9 @@ sudo -s /volume1/scripts/syno_enable_dedupe.sh
   -r, --restore         Undo all changes made by the script
   -t, --tiny            Enable tiny data deduplication (only needs 4GB RAM)
                           DSM 7.2.1 and later only
-      --hdd             Enable data deduplication for HDDs
-                          HDD data deduplication is not supported by Synology
-                          No known stability issues but use at your own risk
+      --hdd             Enable data deduplication for HDDs.
+                        Can cause files to become more fragmented,
+                        resulting in decreased access performance.
   -e, --email           Disable colored text in output for scheduler emails
       --autoupdate=AGE  Auto update script (useful when script is scheduled)
                           AGE is how many days old a release must be before
