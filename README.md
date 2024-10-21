@@ -153,8 +153,8 @@ sudo -s /volume1/scripts/syno_enable_dedupe.sh
   -t, --tiny            Enable tiny data deduplication (only needs 4GB RAM)
                           DSM 7.2.1 and later only
       --hdd             Enable data deduplication for HDDs.
-                        Can cause files to become more fragmented,
-                        resulting in decreased access performance.
+                          Can cause files to become more fragmented,
+                          resulting in decreased access performance.
   -e, --email           Disable colored text in output for scheduler emails
       --autoupdate=AGE  Auto update script (useful when script is scheduled)
                           AGE is how many days old a release must be before
