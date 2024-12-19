@@ -1,3 +1,7 @@
+v1.4.31
+- Updated to work with xpe. Issues #88 #83 and maybe #73
+- Prevent Entware or user edited PATH causing issues.
+
 v1.4.30
 - Updated help to explain why Synology avoids using deduplication on HDDs.
 - Updated Finished message to say you may need to reboot.

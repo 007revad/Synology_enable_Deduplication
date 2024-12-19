@@ -11,10 +11,14 @@
 
 # Added support for DSM 7.0.1 to 7.2 (untested)
 
-scriptver="v1.4.30"
+scriptver="v1.4.31"
 script=Synology_enable_Deduplication
 repo="007revad/Synology_enable_Deduplication"
 scriptname=syno_enable_dedupe
+
+# Prevent Entware or user edited PATH causing issues
+# shellcheck disable=SC2155  # Declare and assign separately to avoid masking return values
+export PATH=$(echo "$PATH" | sed -e 's/\/opt\/bin:\/opt\/sbin://')
 
 # Check BASH variable is bash
 if [ ! "$(basename "$BASH")" = bash ]; then
@@ -988,6 +992,12 @@ elif [[ -f "$strgmgr" ]]; then
         echo -e "\nDedupe config menu for HDDs and 2.5\" SSDs not enabled."
         echo "Run the script with the --hdd option if you want it enabled."
     fi
+fi
+
+
+# Make sure xpe's storage_manager.js.gz includes our changes. Issue #88
+if [[ -f "${strgmgr}.gz" ]]; then
+    gzip -c "${strgmgr}" > "${strgmgr}.gz"
 fi
 
 
