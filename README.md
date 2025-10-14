@@ -33,7 +33,7 @@ Please [leave a comment in this discussion](https://github.com/007revad/Synology
 - The volume needs **Usage detail analysis** enabled. See [Enable and View Usage Details](https://kb.synology.com/en-global/DSM/help/DSM/StorageManager/volume_view_usage?version=7).
 
 
-### Works in DSM 7.2.1 and 7.2.2 for the following models
+### Works in DSM 7.2.1, 7.2.2 and 7.3 for the following models
 
 <details>
   <summary>Click here to see list</summary>
@@ -42,15 +42,16 @@ Please [leave a comment in this discussion](https://github.com/007revad/Synology
 |------------|---------------|-------------------------------|--------|-------|
 | DS224+     | Geminilake    | DSM 7.2.1-69057 Update 1 to 5 | yes    | Use v1.2.14 or later |
 | DS1823xs+  | V1000         | DSM 7.2.1-69057 Update 1 to 5 | yes    | Use v1.2.14 or later |
-| DS923+     | R1000         | DSM 7.2.2-72806 Update 2 | yes    | Use v1.2.14 or later |
-| DS923+     | R1000         | DSM 7.3-81180 | yes    | Use v1.2.14 or later |
-| DS923+     | R1000         | DSM 7.2.2-72806 | yes    | Use v1.2.14 or later |
+| DS923+     | R1000         | DSM 7.2.2-72806 Update 2      | yes    | Use v1.2.14 or later |
+| DS923+     | R1000         | DSM 7.3-81180                 | yes    | Use v1.2.14 or later |
+| DS923+     | R1000         | DSM 7.2.2-72806               | yes    | Use v1.2.14 or later |
 | DS923+     | R1000         | DSM 7.2.1-69057 Update 1 to 5 | yes    | Use v1.2.14 or later |
-| DS723+     | R1000         | DSM 7.2.2-72806 Update 3 | yes    | Use v1.2.14 or later |
+| DS723+     | R1000         | DSM 7.2.2-72806 Update 3      | yes    | Use v1.2.14 or later |
 | DS723+     | R1000         | DSM 7.2.1-69057 Update 1 to 5 | yes    | Use v1.2.14 or later |
 | DS423+     | Geminilake    | DSM 7.2.1-69057 Update 1 to 5 | yes    | Use v1.2.14 or later |
 | DS3622xs+  | Broadwellnk   | DSM 7.2.1-69057 Update 1 to 5 | yes    | Use v1.2.14 or later |
 | DS2422xs+  | V1000         | DSM 7.2.1-69057 Update 1 to 5 | yes    | Use v1.2.14 or later |
+| DS1821+    | V1000         | DSM 7.3-81180                 | yes    | Use v1.2.14 or later |
 | DS1821+    | V1000         | DSM 7.2.1-69057 Update 1 to 5 | yes    | Use v1.2.14 or later |
 | DS1621+    | V1000         | DSM 7.2.1-69057 Update 1 to 5 | yes    | Use v1.2.14 or later |
 | DS1621xs+  | Broadwellnk   | DSM 7.2.1-69057 Update 1 to 5 | yes    | Use v1.2.14 or later |
