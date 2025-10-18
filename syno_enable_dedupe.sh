@@ -534,7 +534,7 @@ if [[ $restore == "yes" ]]; then
                 sed -i "s/${string1}/${string2/&&/\\&\\&}/g" "$strgmgr"
 
                 # Check we restored string in file
-                if grep -o "string2" "${strgmgr}" >/dev/null; then
+                if grep -o "$string2" "${strgmgr}" >/dev/null; then
                     restored="yes"
                     echo "Restored $(basename -- "$strgmgr")"
                 else
