@@ -11,7 +11,7 @@
 
 # Added support for DSM 7.0.1 to 7.2 (untested)
 
-scriptver="v1.4.31"
+scriptver="v1.4.32"
 script=Synology_enable_Deduplication
 repo="007revad/Synology_enable_Deduplication"
 scriptname=syno_enable_dedupe
@@ -534,7 +534,7 @@ if [[ $restore == "yes" ]]; then
                 sed -i "s/${string1}/${string2/&&/\\&\\&}/g" "$strgmgr"
 
                 # Check we restored string in file
-                if grep -o "string2" "${strgmgr}" >/dev/null; then
+                if grep -o "$string2" "${strgmgr}" >/dev/null; then
                     restored="yes"
                     echo "Restored $(basename -- "$strgmgr")"
                 else

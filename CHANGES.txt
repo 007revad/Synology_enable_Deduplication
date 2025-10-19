@@ -1,3 +1,6 @@
+v1.4.32
+- Bug fix for saying restoring storage_panel.js from backup failed when it succeeded. Issue #102
+
 v1.4.31
 - Updated to work with xpe. Issues #88 #83 and maybe #73
 - Prevent Entware or user edited PATH causing issues.
