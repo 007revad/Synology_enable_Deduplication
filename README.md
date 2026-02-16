@@ -21,6 +21,7 @@ Enable data deduplication with non-Synology SSDs and unsupported NAS models
 - It works in DSM 7.0.1 and later on models with one of the following [CPU architectures](https://kb.synology.com/en-global/DSM/tutorial/What_kind_of_CPU_does_my_NAS_have): V1000, R1000, Geminilake and Broadwellnk.
 - It works in DSM 7.2.2 and later on models with one of the following [CPU architectures](https://kb.synology.com/en-global/DSM/tutorial/What_kind_of_CPU_does_my_NAS_have): V1000nk, R1000nk and Geminilakenk.
 - It works in DSM 7.2.1 and later on models with a Broadwellnkv2, Broadwell, Purley, Epyc7002 CPU.
+- v1.4.33 works in DSM 7.3.2 and later.
 
 It does **NOT** work for models with Apollolake, Avoton or Denverton CPUs.
 
@@ -40,16 +41,21 @@ Please [leave a comment in this discussion](https://github.com/007revad/Synology
 
 | Model      | CPU Arch      | DSM version                   | Works  | Notes |
 |------------|---------------|-------------------------------|--------|-------|
-| DS1825+    | V1000nk       | DSM 7.2.2-72806 | yes    | Use v1.2.14 or later |
-| DS1525+    | V1000nk       | DSM 7.2.2-72806 | yes    | Use v1.2.14 or later |
-| DS925+     | V1000nk       | DSM 7.2.2-72806 | yes    | Use v1.2.14 or later |
-| DS725+     | R1600nk       | DSM 7.2.2-72806 | yes    | Use v1.2.14 or later |
-| DS425+     | Geminilakenk  | DSM 7.2.2-72806 | yes    | Use v1.2.14 or later |
-| DS225+     | Geminilakenk  | DSM 7.2.2-72806 | yes    | Use v1.2.14 or later |
+| DS1825+    | V1000nk       | DSM 7.2.2-72806               | yes    | Use v1.2.14 or later |
+| DS1525+    | V1000nk       | DSM 7.2.2-72806               | yes    | Use v1.2.14 or later |
+| DS925+     | V1000nk       | DSM 7.3.2-86009 Update 1      | yes    | Use v1.4.33 or later |
+| DS925+     | V1000nk       | DSM 7.3.2-86009               | yes    | Use v1.4.33 or later |
+| DS925+     | V1000nk       | DSM 7.3.1-86003               | yes    | Use v1.2.14 or later |
+| DS925+     | V1000nk       | DSM 7.3-81180                 | yes    | Use v1.2.14 or later |
+| DS925+     | V1000nk       | DSM 7.2.2-72806 Update 1 to 4 | yes    | Use v1.2.14 or later |
+| DS925+     | V1000nk       | DSM 7.2.2-72806               | yes    | Use v1.2.14 or later |
+| DS725+     | R1600nk       | DSM 7.2.2-72806               | yes    | Use v1.2.14 or later |
+| DS425+     | Geminilakenk  | DSM 7.2.2-72806               | yes    | Use v1.2.14 or later |
+| DS225+     | Geminilakenk  | DSM 7.2.2-72806               | yes    | Use v1.2.14 or later |
 | DS224+     | Geminilake    | DSM 7.2.1-69057 Update 1 to 5 | yes    | Use v1.2.14 or later |
 | DS1823xs+  | V1000         | DSM 7.2.1-69057 Update 1 to 5 | yes    | Use v1.2.14 or later |
-| DS923+     | R1000         | DSM 7.2.2-72806 Update 2      | yes    | Use v1.2.14 or later |
 | DS923+     | R1000         | DSM 7.3-81180                 | yes    | Use v1.2.14 or later |
+| DS923+     | R1000         | DSM 7.2.2-72806 Update 2      | yes    | Use v1.2.14 or later |
 | DS923+     | R1000         | DSM 7.2.2-72806               | yes    | Use v1.2.14 or later |
 | DS923+     | R1000         | DSM 7.2.1-69057 Update 1 to 5 | yes    | Use v1.2.14 or later |
 | DS723+     | R1000         | DSM 7.2.2-72806 Update 3      | yes    | Use v1.2.14 or later |
@@ -57,12 +63,15 @@ Please [leave a comment in this discussion](https://github.com/007revad/Synology
 | DS423+     | Geminilake    | DSM 7.2.1-69057 Update 1 to 5 | yes    | Use v1.2.14 or later |
 | DS3622xs+  | Broadwellnk   | DSM 7.2.1-69057 Update 1 to 5 | yes    | Use v1.2.14 or later |
 | DS2422xs+  | V1000         | DSM 7.2.1-69057 Update 1 to 5 | yes    | Use v1.2.14 or later |
+| DS1821+    | V1000         | DSM 7.3.2-86009 Update 1      | yes    | Use v1.4.33 or later |
+| DS1821+    | V1000         | DSM 7.3.1-86003               | yes    | Use v1.2.14 or later |
 | DS1821+    | V1000         | DSM 7.3-81180                 | yes    | Use v1.2.14 or later |
 | DS1821+    | V1000         | DSM 7.2.1-69057 Update 1 to 5 | yes    | Use v1.2.14 or later |
 | DS1621+    | V1000         | DSM 7.2.1-69057 Update 1 to 5 | yes    | Use v1.2.14 or later |
 | DS1621xs+  | Broadwellnk   | DSM 7.2.1-69057 Update 1 to 5 | yes    | Use v1.2.14 or later |
 | DS1522+    | R1000         | DSM 7.2.1-69057 Update 1 to 5 | yes    | Use v1.2.14 or later |
 | DS1520+    | Geminilake    | DSM 7.2.1-69057 Update 1 to 5 | yes    | Use v1.2.14 or later |
+| DS920+     | Geminilake    | DSM 7.3.2-86009 Update 1      | yes    | Use v1.4.33 or later |
 | DS920+     | Geminilake    | DSM 7.2.1-69057 Update 1 to 5 | yes    | Use v1.2.14 or later |
 | DS720+     | Geminilake    | DSM 7.2.1-69057 Update 1 to 5 | yes    | Use v1.2.14 or later |
 | DS420+     | Geminilake    | DSM 7.2.1-69057 Update 1 to 5 | yes    | Use v1.2.14 or later |
