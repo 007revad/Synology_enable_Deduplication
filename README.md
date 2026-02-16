@@ -34,7 +34,7 @@ Please [leave a comment in this discussion](https://github.com/007revad/Synology
 - The volume needs **Usage detail analysis** enabled. See [Enable and View Usage Details](https://kb.synology.com/en-global/DSM/help/DSM/StorageManager/volume_view_usage?version=7).
 
 
-### Works in DSM 7.2.1, 7.2.2 and 7.3 for the following models
+### Works in DSM 7.2.1, 7.2.2, 7.3, 7.3.1 and 7.3.2 for the following models
 
 <details>
   <summary>Click here to see list</summary>
