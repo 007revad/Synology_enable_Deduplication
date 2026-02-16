@@ -11,7 +11,7 @@
 
 # Added support for DSM 7.0.1 to 7.2 (untested)
 
-scriptver="v1.4.32"
+scriptver="v1.4.33"
 script=Synology_enable_Deduplication
 repo="007revad/Synology_enable_Deduplication"
 scriptname=syno_enable_dedupe
@@ -195,6 +195,12 @@ productversion=$(/usr/syno/bin/synogetkeyvalue /etc.defaults/VERSION productvers
 buildphase=$(/usr/syno/bin/synogetkeyvalue /etc.defaults/VERSION buildphase)
 buildnumber=$(/usr/syno/bin/synogetkeyvalue /etc.defaults/VERSION buildnumber)
 smallfixnumber=$(/usr/syno/bin/synogetkeyvalue /etc.defaults/VERSION smallfixnumber)
+
+# DSM 7.3.2 ignores support_tiny_btrfs_dedupe
+# Even 4GB memory works with support_btrfs_dedupe
+if [[ $buildnumber -ge "86009" ]]; then
+    tiny=""
+fi
 
 # Show DSM full version and model
 if [[ $buildphase == GM ]]; then buildphase=""; fi
