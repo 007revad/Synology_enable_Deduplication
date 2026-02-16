@@ -1,3 +1,6 @@
+v1.4.33
+- Added support for DSM 7.3.2 with 4GB or more memory but less than 16GB of memory.
+
 v1.4.32
 - Bug fix for saying restoring storage_panel.js from backup failed when it succeeded. Issue #102
 
