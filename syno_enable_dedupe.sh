@@ -9,8 +9,6 @@
 # sudo /volume1/scripts/syno_enable_dedupe.sh
 #-------------------------------------------------------------------------------
 
-# Added support for DSM 7.0.1 to 7.2 (untested)
-
 scriptver="v1.4.33"
 script=Synology_enable_Deduplication
 repo="007revad/Synology_enable_Deduplication"
