@@ -16,6 +16,10 @@ Enable data deduplication with non-Synology SSDs and unsupported NAS models
 
 [Synology models that do offically support data deduplication](https://kb.synology.com/en-global/DSM/tutorial/Which_models_support_data_deduplication)
 
+### DSM 7.4
+
+For Synology Models that support DSM 7.4's Storage Efficiency running this script with the `--hdd` option will enable Storage Efficiency for 3rd party drives.
+
 ### Synology models that the script works with
 
 - It works in DSM 7.0.1 and later on models with one of the following [CPU architectures](https://kb.synology.com/en-global/DSM/tutorial/What_kind_of_CPU_does_my_NAS_have): V1000, R1000, Geminilake and Broadwellnk.
